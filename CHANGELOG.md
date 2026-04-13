@@ -4,6 +4,16 @@ All updates to Web Design OS. Type `update system` in Claude Code to get the lat
 
 ---
 
+## v1.1.1 - Polish + Portal Workflow
+
+- Added `workflow_generate-portal.md` - creates and refreshes client portals from project data
+- Strategy deck: added transformation extraction instructions and sitemap adaptation guidance
+- Client portal: documented all placeholder data sources, removed dead placeholder
+- Setup guide added at `docs/setup-guide.md`
+- All 49 workflows audited for STOP conditions (all clean)
+
+---
+
 ## v1.1.0 - Skills + Visual Direction Engine
 
 Major additions to v1.0.
