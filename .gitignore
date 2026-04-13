@@ -1,0 +1,19 @@
+# Personal folders - never tracked or overwritten by updates
+01_Core/
+04_Clients/
+05_Projects/
+00_System/system_mode.md
+00_System/system_paths.md
+00_System/system_onboarding-progress.md
+00_System/system_config.md
+00_System/test/
+
+# Client interview app .env files (when added in v1.1)
+client-interview-app/.env
+client-interview-app/.env.local
+client-interview-app/node_modules/
+
+# System
+.DS_Store
+.update-backups/
+*.log

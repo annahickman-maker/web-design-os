@@ -1,0 +1,816 @@
+<!--
+---
+type: template
+slug: client-portal-html
+status: active
+tags:
+  - type/template
+  - domain/client-management
+---
+
+# Client Portal HTML Template
+
+A single-page client portal in the Web Design OS editorial style.
+Matches the strategy deck typography, tokens, and layout language so
+every designer-branded deliverable feels like one system.
+
+## Placeholders to replace
+
+All text in [SQUARE_BRACKETS] should be replaced with real content.
+The workflow populates these at generation time.
+
+Core placeholders and their data sources:
+
+Client + designer identity:
+- [CLIENT_NAME] - from 04_Clients/[slug]/client.md "Name" field
+- [CLIENT_FIRST_NAME] - first name extracted from above
+- [PROJECT_TYPE] - from 04_Clients/[slug]/client.md "Project Type"
+- [DESIGNER_NAME] - from 01_Core/core_positioning.md "Name"
+- [DESIGNER_FIRST_NAME] - first name extracted from above
+- [DESIGNER_EMAIL] - from 01_Core/core_positioning.md "Email"
+- [YEAR] - current year at generation time
+
+Video:
+- [LOOM_VIDEO_URL] - designer provides per client, or omit block
+
+Status:
+- [CURRENT_STATUS] - from project-state.md "Pipeline State" field,
+  mapped to display text (e.g. "strategy" -> "Strategy in progress")
+
+Action items (derived from project-state.md Next Actions):
+- [ACTION_1_TITLE] - the client-facing version of the top next action
+- [ACTION_1_DESCRIPTION] - what the client needs to do and why
+- [ACTION_1_LINK] - URL for the action (use [BOOKING_URL] from
+  core_booking.md for any meeting CTAs, or a deliverable link)
+- [ACTION_1_BUTTON] - button label (e.g. "Book meeting", "Review copy")
+- [ACTION_2_*] - same pattern for the second action
+- If only one action exists, remove the second .action block
+- If no client actions exist, replace the section with a
+  "Nothing needed from you right now" message
+
+Deliverable links (relative paths to client deliverables folder):
+- [PROPOSAL_LINK] - 04_Clients/[slug]/deliverables/proposal.html
+- [CONTRACT_LINK] - 04_Clients/[slug]/deliverables/contract.html
+- [INVOICE_LINK] - 04_Clients/[slug]/deliverables/invoice.html
+- [STRATEGY_DECK_LINK] - 04_Clients/[slug]/deliverables/strategy-deck.html
+- [WEBSITE_COPY_LINK] - 04_Clients/[slug]/deliverables/website-copy.html
+- [DESIGN_PREVIEW_LINK] - 04_Clients/[slug]/deliverables/design-preview.html
+- Status values: "Pending" | "Drafted" | "Sent" | "Signed DATE" | "Complete"
+- If a deliverable doesn't exist yet, set link to "#" and status to "Pending"
+
+Project dates (from project-state.md Key Dates):
+- [DATE_CONFIRMED] - Key Dates > Kickoff
+- [DATE_BRIEF] - Key Dates > Interview deadline
+- [DATE_STRATEGY_MEETING] - Key Dates > Strategy meeting
+- [DATE_COPY_REVIEW] - Key Dates > Copy feedback deadline
+- [DATE_DESIGN_PRESENTATION] - Key Dates > Design review 1
+- [DATE_LAUNCH] - Key Dates > Launch target
+
+Milestone state classes (set per milestone by the workflow):
+- .milestone--done + status "Complete" - for passed milestones
+- .milestone--current + status "In progress" - for active milestone
+- No extra class + status "Pending" - for future milestones
+The workflow reads Pipeline State and maps it to which milestones
+are done/current/pending (see workflow_generate-portal.md).
+
+## Booking link convention
+
+The Web Design OS system keeps ONE booking link per designer at
+`01_Core/core_booking.md`. Any action in this portal that asks the
+client to book a meeting (strategy meeting, design presentation,
+review call, launch call) should use [BOOKING_URL] as its link
+target. The workflow reads core_booking.md and injects it into
+[ACTION_N_LINK] wherever a booking CTA is appropriate. Reminders,
+rescheduling, and calendar sync are all handled by the designer's
+booking platform (Calendly, Cal.com, Google, etc.) - the portal
+just links to it.
+
+## Brand tokens
+
+Fonts and colors come from the designer's core_brand-visual.md via
+the same BRAND TOKENS block the strategy deck uses. Editing tokens
+here updates the portal look. Defaults match the editorial master.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[CLIENT_NAME] - Project Portal</title>
+
+<!-- BRAND_FONTS_START - Replaced per designer during onboarding template review -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- BRAND_FONTS_END -->
+
+<style>
+/* ============================================================
+   BRAND TOKENS - Designer brand, set during onboarding
+   Source: 01_Core/core_brand-visual.md
+   ============================================================ */
+:root {
+    --brand-serif: 'Fraunces', Georgia, serif;
+    --brand-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --brand-ink: #0A0A0A;
+    --brand-paper: #FAFAF7;
+    --brand-paper-pure: #FFFFFF;
+    --brand-accent: #0A0A0A;
+    --brand-name: '[DESIGNER_NAME]';
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --serif: var(--brand-serif);
+    --sans: var(--brand-sans);
+    --ink: var(--brand-ink);
+    --ink-soft: #1A1A1A;
+    --ink-mute: #666666;
+    --ink-faint: #999999;
+    --paper: var(--brand-paper);
+    --paper-pure: var(--brand-paper-pure);
+    --rule: var(--brand-ink);
+    --rule-soft: #E5E5E0;
+}
+
+html, body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern', 'liga', 'ss01';
+    line-height: 1.5;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ============================================================
+   PAGE CONTAINER
+   ============================================================ */
+.portal {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 72px 64px 56px;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.display-xl {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(40px, 5.5vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.015em;
+}
+
+.display-xl em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.display-md {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+}
+
+.display-md em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.eyebrow--mute { color: var(--ink-mute); }
+
+.lead {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-soft);
+    max-width: 720px;
+}
+
+.body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 680px;
+}
+
+.caption {
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   SECTIONS & RULES
+   ============================================================ */
+.section {
+    padding: 48px 0;
+    border-top: 1px solid var(--rule);
+}
+
+.section:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.section__header .eyebrow {
+    color: var(--ink);
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+    padding-bottom: 48px;
+}
+
+.hero__greeting {
+    margin-bottom: 20px;
+}
+
+.hero__title {
+    margin-bottom: 0;
+}
+
+/* ============================================================
+   WELCOME VIDEO
+   ============================================================ */
+.welcome-video {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #D9D9D9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-video iframe,
+.welcome-video video {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.welcome-video__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   PROJECT STATUS - milestones
+   ============================================================ */
+.milestones {
+    display: flex;
+    flex-direction: column;
+}
+
+.milestone {
+    display: grid;
+    grid-template-columns: 24px 44px 1fr auto auto;
+    gap: 20px;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.milestone__date {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.milestone--done .milestone__date {
+    color: var(--ink-mute);
+}
+
+.milestone--current .milestone__date {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.milestone:last-child {
+    border-bottom: none;
+}
+
+.milestone__dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--ink-faint);
+    box-sizing: border-box;
+    justify-self: center;
+}
+
+.milestone--done .milestone__dot {
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+.milestone--current .milestone__dot {
+    background: var(--ink);
+    border-color: var(--ink);
+    box-shadow: 0 0 0 4px var(--paper), 0 0 0 5.5px var(--ink);
+}
+
+.milestone__num {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: var(--ink-mute);
+}
+
+.milestone__label {
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-mute);
+}
+
+.milestone--done .milestone__label {
+    color: var(--ink-mute);
+}
+
+.milestone--current .milestone__num {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.milestone--current .milestone__label {
+    color: var(--ink);
+    font-weight: 600;
+    font-family: var(--serif);
+    font-size: 20px;
+    letter-spacing: -0.005em;
+}
+
+.milestone__status {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.milestone--done .milestone__status {
+    color: var(--ink);
+}
+
+.milestone--current .milestone__status {
+    color: var(--ink);
+}
+
+/* ============================================================
+   NEXT UP - action items
+   ============================================================ */
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.action {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule-soft);
+}
+
+.action:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+.action__eyebrow {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.action__title {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+}
+
+.action__title em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.action__desc {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 620px;
+}
+
+.action__link {
+    align-self: flex-start;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--ink);
+    transition: opacity 0.2s ease;
+}
+
+.action__link:hover {
+    opacity: 0.6;
+}
+
+.action__link::after {
+    content: ' \2192';
+    display: inline;
+}
+
+/* ============================================================
+   DELIVERABLES - document links with status
+   ============================================================ */
+.deliverables {
+    display: flex;
+    flex-direction: column;
+}
+
+.deliverable {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 32px;
+    align-items: baseline;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--rule-soft);
+    transition: background 0.15s ease;
+}
+
+.deliverable:last-child {
+    border-bottom: none;
+}
+
+.deliverable:hover {
+    background: rgba(0,0,0,0.015);
+}
+
+.deliverable__name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+}
+
+.deliverable__status {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    white-space: nowrap;
+}
+
+.deliverable__status--signed,
+.deliverable__status--complete {
+    color: var(--ink);
+}
+
+.deliverable__status--pending {
+    color: var(--ink-faint);
+}
+
+.deliverable__arrow {
+    font-family: var(--sans);
+    font-size: 18px;
+    color: var(--ink-mute);
+    margin-left: 8px;
+}
+
+/* ============================================================
+   CONTACT
+   ============================================================ */
+.contact {
+    padding-top: 56px;
+}
+
+.contact__label {
+    margin-bottom: 16px;
+}
+
+.contact__body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+}
+
+.contact__email {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 4px;
+    transition: opacity 0.2s ease;
+}
+
+.contact__email:hover {
+    opacity: 0.6;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.portal-footer {
+    margin-top: 96px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+}
+
+.portal-footer__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 720px) {
+    .portal {
+        padding: 56px 32px 48px;
+    }
+
+    .hero__meta,
+    .section__header,
+    .portal-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .deliverable {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .milestone {
+        grid-template-columns: 24px 1fr auto;
+        gap: 16px;
+    }
+
+    .milestone__num {
+        display: none;
+    }
+
+    .milestone__date {
+        grid-column: 2;
+        grid-row: 2;
+        margin-top: 2px;
+    }
+
+    .milestone__status {
+        grid-column: 3;
+        grid-row: 1;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="portal">
+
+    <!-- ============================================================
+         HERO
+         ============================================================ -->
+    <section class="hero">
+        <div class="hero__greeting eyebrow eyebrow--mute">[PROJECT_TYPE] Project</div>
+        <h1 class="hero__title display-xl">Welcome, <em>[CLIENT_FIRST_NAME]</em></h1>
+    </section>
+
+    <!-- ============================================================
+         WELCOME VIDEO
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">A Quick Note</div>
+            <div class="eyebrow eyebrow--mute">From [DESIGNER_FIRST_NAME]</div>
+        </div>
+        <div class="welcome-video">
+            <div class="welcome-video__label">[LOOM_VIDEO_URL]</div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         PROJECT STATUS
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Project Status</div>
+            <div class="eyebrow eyebrow--mute">[CURRENT_STATUS]</div>
+        </div>
+        <div class="milestones">
+            <div class="milestone milestone--done">
+                <div class="milestone__dot"></div>
+                <div class="milestone__num">01</div>
+                <div class="milestone__label">Project confirmed</div>
+                <div class="milestone__date">[DATE_CONFIRMED]</div>
+                <div class="milestone__status">Complete</div>
+            </div>
+            <div class="milestone milestone--done">
+                <div class="milestone__dot"></div>
+                <div class="milestone__num">02</div>
+                <div class="milestone__label">Brief submitted</div>
+                <div class="milestone__date">[DATE_BRIEF]</div>
+                <div class="milestone__status">Complete</div>
+            </div>
+            <div class="milestone milestone--current">
+                <div class="milestone__dot"></div>
+                <div class="milestone__num">03</div>
+                <div class="milestone__label">Strategy meeting</div>
+                <div class="milestone__date">[DATE_STRATEGY_MEETING]</div>
+                <div class="milestone__status">In progress</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone__dot"></div>
+                <div class="milestone__num">04</div>
+                <div class="milestone__label">Copy review</div>
+                <div class="milestone__date">[DATE_COPY_REVIEW]</div>
+                <div class="milestone__status">Pending</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone__dot"></div>
+                <div class="milestone__num">05</div>
+                <div class="milestone__label">Design presentation</div>
+                <div class="milestone__date">[DATE_DESIGN_PRESENTATION]</div>
+                <div class="milestone__status">Pending</div>
+            </div>
+            <div class="milestone">
+                <div class="milestone__dot"></div>
+                <div class="milestone__num">06</div>
+                <div class="milestone__label">Launch</div>
+                <div class="milestone__date">[DATE_LAUNCH]</div>
+                <div class="milestone__status">Pending</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         NEXT UP
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Next Up</div>
+            <div class="eyebrow eyebrow--mute">What to do now</div>
+        </div>
+        <div class="actions">
+            <div class="action">
+                <div class="action__eyebrow">01</div>
+                <h3 class="action__title">[ACTION_1_TITLE]</h3>
+                <p class="action__desc">[ACTION_1_DESCRIPTION]</p>
+                <a href="[ACTION_1_LINK]" class="action__link">[ACTION_1_BUTTON]</a>
+            </div>
+            <div class="action">
+                <div class="action__eyebrow">02</div>
+                <h3 class="action__title">[ACTION_2_TITLE]</h3>
+                <p class="action__desc">[ACTION_2_DESCRIPTION]</p>
+                <a href="[ACTION_2_LINK]" class="action__link">[ACTION_2_BUTTON]</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         DELIVERABLES
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Deliverables</div>
+            <div class="eyebrow eyebrow--mute">Project documents</div>
+        </div>
+        <div class="deliverables">
+            <a href="[PROPOSAL_LINK]" class="deliverable">
+                <div class="deliverable__name">Proposal</div>
+                <div class="deliverable__status">[PROPOSAL_STATUS]</div>
+                <div class="deliverable__arrow">&rarr;</div>
+            </a>
+            <a href="[CONTRACT_LINK]" class="deliverable">
+                <div class="deliverable__name">Contract</div>
+                <div class="deliverable__status">[CONTRACT_STATUS]</div>
+                <div class="deliverable__arrow">&rarr;</div>
+            </a>
+            <a href="[INVOICE_LINK]" class="deliverable">
+                <div class="deliverable__name">Invoice</div>
+                <div class="deliverable__status">[INVOICE_STATUS]</div>
+                <div class="deliverable__arrow">&rarr;</div>
+            </a>
+            <a href="[STRATEGY_DECK_LINK]" class="deliverable">
+                <div class="deliverable__name">Brand Strategy Deck</div>
+                <div class="deliverable__status">[STRATEGY_DECK_STATUS]</div>
+                <div class="deliverable__arrow">&rarr;</div>
+            </a>
+            <a href="[WEBSITE_COPY_LINK]" class="deliverable">
+                <div class="deliverable__name">Website Copy</div>
+                <div class="deliverable__status">[WEBSITE_COPY_STATUS]</div>
+                <div class="deliverable__arrow">&rarr;</div>
+            </a>
+            <a href="[DESIGN_PREVIEW_LINK]" class="deliverable">
+                <div class="deliverable__name">Design Preview</div>
+                <div class="deliverable__status">[DESIGN_PREVIEW_STATUS]</div>
+                <div class="deliverable__arrow">&rarr;</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         CONTACT
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Get in touch</div>
+            <div class="eyebrow eyebrow--mute">Any questions</div>
+        </div>
+        <p class="contact__body">Reply to any email from me, or reach me directly at the address below. I answer within one working day.</p>
+        <a href="mailto:[DESIGNER_EMAIL]" class="contact__email">[DESIGNER_EMAIL]</a>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <div class="portal-footer">
+        <div class="portal-footer__label">[CLIENT_NAME] / [DESIGNER_NAME]</div>
+        <div class="portal-footer__label">[YEAR]</div>
+    </div>
+
+</div>
+
+</body>
+</html>

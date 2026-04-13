@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schemas/settings.json",
+
+  "_comment_hooks": "Web Design OS uses a PostToolUse hook to remind Claude to refresh the dashboard whenever any client's project-state.md is edited. The hook emits a system reminder the next time Claude responds, so the designer doesn't have to manually say 'show my dashboard' after finishing a task. If this hook isn't firing as expected, comment it out and run 'show my dashboard' manually after each state change.",
+
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$CLAUDE_TOOL_INPUT\" 2>/dev/null | grep -q 'project-state.md'; then echo 'DASHBOARD_DIRTY=1' > /tmp/wdos-dashboard-dirty 2>/dev/null; echo '<system-reminder>A client project-state.md was just edited. The dashboard is out of date. Run workflow_dashboard.md to regenerate dashboard.html, the affected client workspace.html, and rendered resource HTML files before continuing.</system-reminder>'; fi"
+          }
+        ]
+      }
+    ]
+  },
+
+  "_comment_skills": "Web Design OS skills auto-load from .claude/skills/ based on description matching. No manual invocation needed."
+}

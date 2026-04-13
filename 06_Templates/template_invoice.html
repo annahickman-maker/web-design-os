@@ -1,0 +1,871 @@
+<!--
+---
+type: template
+slug: invoice-html
+status: active
+tags:
+  - type/template
+  - domain/workflow
+aliases:
+  - Invoice Template
+---
+
+# Invoice Template (HTML)
+
+The project invoice in the Web Design OS editorial style. Opens
+automatically after the client signs the contract. Matches the
+proposal / contract / portal brand system via shared tokens.
+
+## Flow
+
+Proposal (accept) - Contract (sign) - Invoice (this file - pay) -
+Project begins.
+
+The contract's Formsubmit form uses its `_next` field to redirect
+the client to this invoice after signing. The invoice shows a
+project recap, line items, total, deposit amount, and a big "Pay
+deposit" button linking to a Stripe Payment Link.
+
+## Payment architecture (v1.0)
+
+Designer creates a Stripe Payment Link for each invoice in their
+Stripe dashboard (takes 30 seconds), then pastes the URL into the
+[STRIPE_PAYMENT_LINK] placeholder. Client clicks the button,
+completes payment on Stripe's hosted checkout, and Stripe handles
+the rest - cards, ACH, SEPA, tax, receipts, refunds.
+
+For designers who don't use Stripe (or offer alternatives), the
+template also includes a secondary bank transfer section pulled
+from `01_Core/core_payments.md`.
+
+## Payment architecture (v1.2 upgrade)
+
+When the Netlify auto-portal infrastructure ships, add full Stripe
+API integration. Workflow creates Payment Links programmatically
+via the designer's connected Stripe account, polls Stripe for
+payment status, and auto-updates the client portal when the deposit
+is paid. This template's [STRIPE_PAYMENT_LINK] placeholder gets
+populated automatically instead of manually - no template changes
+needed.
+
+## Placeholders to replace
+
+Core:
+- [CLIENT_NAME], [CLIENT_BUSINESS_NAME]
+- [DESIGNER_NAME], [DESIGNER_BUSINESS_NAME], [DESIGNER_EMAIL]
+- [YEAR], [DATE]
+- [INVOICE_ID] (e.g. "client-slug-invoice-01")
+- [INVOICE_NUMBER] (sequential, e.g. "INV-0042")
+- [DUE_DATE]
+
+Project:
+- [PROJECT_TYPE], [PROJECT_RECAP] (one sentence summary)
+- [TOTAL_PROJECT_COST]
+- [DEPOSIT_AMOUNT], [DEPOSIT_PERCENTAGE] (e.g. "50%")
+- [BALANCE_DUE] (remaining after deposit)
+- [CURRENCY] (e.g. "USD", "GBP", "EUR", "AUD")
+
+Payment:
+- [STRIPE_PAYMENT_LINK] (created by designer in Stripe dashboard)
+- [BANK_ACCOUNT_NAME], [BANK_ACCOUNT_NUMBER], [BANK_SORT_CODE]
+  or [BANK_IBAN], [BANK_SWIFT] depending on jurisdiction
+- [BANK_DETAILS_NOTE] (any notes like "reference the invoice number
+  when paying by transfer")
+
+Line items:
+- [LINE_ITEM_1_NAME], [LINE_ITEM_1_AMOUNT]
+- [LINE_ITEM_2_NAME], [LINE_ITEM_2_AMOUNT]
+- [LINE_ITEM_3_NAME], [LINE_ITEM_3_AMOUNT]
+- Add or remove line items to match the project scope
+
+## Brand tokens
+
+Fonts and colours come from the designer's core_brand-visual.md via
+the same BRAND TOKENS block the strategy deck, portal, proposal and
+contract use.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[CLIENT_BUSINESS_NAME] - Invoice [INVOICE_NUMBER]</title>
+
+<!-- BRAND_FONTS_START - Replaced per designer during onboarding template review -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- BRAND_FONTS_END -->
+
+<style>
+/* ============================================================
+   BRAND TOKENS
+   ============================================================ */
+:root {
+    --brand-serif: 'Fraunces', Georgia, serif;
+    --brand-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --brand-ink: #0A0A0A;
+    --brand-paper: #FAFAF7;
+    --brand-paper-pure: #FFFFFF;
+    --brand-accent: #0A0A0A;
+    --brand-name: '[DESIGNER_NAME]';
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --serif: var(--brand-serif);
+    --sans: var(--brand-sans);
+    --ink: var(--brand-ink);
+    --ink-soft: #1A1A1A;
+    --ink-mute: #666666;
+    --ink-faint: #999999;
+    --paper: var(--brand-paper);
+    --paper-pure: var(--brand-paper-pure);
+    --rule: var(--brand-ink);
+    --rule-soft: #E5E5E0;
+}
+
+html, body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern', 'liga', 'ss01', 'tnum';
+    line-height: 1.5;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ============================================================
+   PAGE CONTAINER
+   ============================================================ */
+.invoice {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 72px 64px 56px;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.display-xl {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+}
+
+.display-xl em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.eyebrow--mute { color: var(--ink-mute); }
+
+/* ============================================================
+   DOWNLOAD PDF BUTTON
+   Floats top-right, triggers window.print() for PDF export.
+   ============================================================ */
+.download-pdf {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    padding: 10px 18px;
+    transition: all 0.2s ease;
+}
+
+.download-pdf:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.download-pdf::after {
+    content: ' \2193';
+    display: inline;
+}
+
+/* ============================================================
+   PRINT STYLES - clean PDF export
+   ============================================================ */
+@media print {
+    html, body {
+        background: white;
+    }
+    .download-pdf,
+    .pay__button,
+    .pay__note {
+        display: none !important;
+    }
+    .pay::before {
+        content: 'Pay via the Stripe Payment Link provided with this invoice, or by bank transfer using the details below.';
+        display: block;
+        font-family: var(--sans);
+        font-size: 12px;
+        line-height: 1.6;
+        color: #000;
+    }
+    .invoice {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+    .section {
+        page-break-inside: avoid;
+        margin-bottom: 40px !important;
+    }
+    .due-now {
+        background: #f0f0f0 !important;
+        color: #000 !important;
+        border: 1px solid #000;
+    }
+    .due-now__label,
+    .due-now__title,
+    .due-now__amount,
+    .due-now__note {
+        color: #000 !important;
+    }
+    @page {
+        size: A4;
+        margin: 20mm;
+    }
+}
+
+/* ============================================================
+   SECTIONS - matches proposal / contract rhythm
+   ============================================================ */
+.section {
+    padding: 32px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 112px;
+}
+
+.section:last-of-type {
+    margin-bottom: 0;
+}
+
+.section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+    padding-bottom: 48px;
+}
+
+.hero__eyebrow {
+    margin-bottom: 20px;
+}
+
+.hero__title {
+    margin-bottom: 40px;
+}
+
+.hero__meta {
+    display: flex;
+    gap: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule-soft);
+    max-width: 760px;
+    flex-wrap: wrap;
+}
+
+.hero__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hero__meta-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.hero__meta-value {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   BILLED TO / FROM
+   ============================================================ */
+.parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+}
+
+.party__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+}
+
+.party__name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    margin-bottom: 6px;
+}
+
+.party__detail {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   PROJECT RECAP
+   ============================================================ */
+.recap {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 760px;
+}
+
+/* ============================================================
+   LINE ITEMS
+   ============================================================ */
+.items {
+    display: flex;
+    flex-direction: column;
+}
+
+.item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: baseline;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.item:first-child {
+    padding-top: 0;
+}
+
+.item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.item__name {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+}
+
+.item__amount {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.totals {
+    display: flex;
+    flex-direction: column;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    gap: 12px;
+}
+
+.totals__row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: baseline;
+}
+
+.totals__label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.totals__value {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.totals__row--grand {
+    padding-top: 18px;
+    border-top: 1px solid var(--rule-soft);
+    margin-top: 6px;
+}
+
+.totals__row--grand .totals__label {
+    color: var(--ink);
+    font-size: 12px;
+}
+
+.totals__row--grand .totals__value {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   DUE NOW (the deposit callout)
+   ============================================================ */
+.due-now {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+    padding: 28px 32px;
+    background: var(--ink);
+    color: var(--paper-pure);
+}
+
+.due-now__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+}
+
+.due-now__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+}
+
+.due-now__title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: var(--paper-pure);
+}
+
+.due-now__amount {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 300;
+    letter-spacing: -0.015em;
+    color: var(--paper-pure);
+    font-variant-numeric: tabular-nums;
+}
+
+.due-now__note {
+    font-family: var(--sans);
+    font-size: 11px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 4px;
+}
+
+/* ============================================================
+   PAY BUTTON
+   ============================================================ */
+.pay {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.pay__button {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--paper-pure);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 20px 48px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.pay__button:hover {
+    opacity: 0.85;
+}
+
+.pay__button::after {
+    content: ' \2192';
+    display: inline;
+}
+
+.pay__note {
+    font-family: var(--sans);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+    max-width: 600px;
+}
+
+/* ============================================================
+   BANK TRANSFER (secondary payment method)
+   ============================================================ */
+.bank {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 640px;
+}
+
+.bank__intro {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+}
+
+.bank__details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 24px;
+    border: 1px solid var(--rule);
+}
+
+.bank__row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 16px;
+    align-items: baseline;
+}
+
+.bank__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.bank__value {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.bank__note {
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+    font-style: italic;
+}
+
+/* ============================================================
+   PAYMENT TERMS FOOTNOTE
+   ============================================================ */
+.terms-note {
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.65;
+    color: var(--ink-mute);
+    max-width: 720px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.invoice-footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+}
+
+.invoice-footer__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 720px) {
+    .invoice {
+        padding: 48px 32px 40px;
+    }
+
+    .section__header,
+    .hero__meta,
+    .invoice-footer,
+    .due-now__row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .parties {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .bank__row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    .totals__row--grand .totals__value {
+        font-size: 26px;
+    }
+
+    .due-now__amount {
+        font-size: 36px;
+    }
+}
+</style>
+</head>
+<body>
+
+<button type="button" class="download-pdf" onclick="window.print();">Download PDF</button>
+
+<div class="invoice">
+
+    <!-- ============================================================
+         HERO
+         ============================================================ -->
+    <section class="hero">
+        <div class="hero__eyebrow eyebrow eyebrow--mute">Invoice [INVOICE_NUMBER]</div>
+        <h1 class="hero__title display-xl"><em>Invoice</em></h1>
+        <div class="hero__meta">
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Issued</div>
+                <div class="hero__meta-value">[DATE]</div>
+            </div>
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Due</div>
+                <div class="hero__meta-value">[DUE_DATE]</div>
+            </div>
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Currency</div>
+                <div class="hero__meta-value">[CURRENCY]</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         BILLED TO / FROM
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Billed</div>
+            <div class="eyebrow eyebrow--mute">To and from</div>
+        </div>
+        <div class="parties">
+            <div class="party">
+                <div class="party__label">From</div>
+                <div class="party__name">[DESIGNER_BUSINESS_NAME]</div>
+                <div class="party__detail">[DESIGNER_NAME]</div>
+                <div class="party__detail">[DESIGNER_EMAIL]</div>
+            </div>
+            <div class="party">
+                <div class="party__label">Billed to</div>
+                <div class="party__name">[CLIENT_BUSINESS_NAME]</div>
+                <div class="party__detail">[CLIENT_NAME]</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         PROJECT RECAP
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Project</div>
+            <div class="eyebrow eyebrow--mute">[PROJECT_TYPE]</div>
+        </div>
+        <p class="recap">[PROJECT_RECAP]</p>
+    </section>
+
+    <!-- ============================================================
+         LINE ITEMS
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Line items</div>
+            <div class="eyebrow eyebrow--mute">What's included</div>
+        </div>
+        <div class="items">
+            <div class="item">
+                <div class="item__name">[LINE_ITEM_1_NAME]</div>
+                <div class="item__amount">[LINE_ITEM_1_AMOUNT]</div>
+            </div>
+            <div class="item">
+                <div class="item__name">[LINE_ITEM_2_NAME]</div>
+                <div class="item__amount">[LINE_ITEM_2_AMOUNT]</div>
+            </div>
+            <div class="item">
+                <div class="item__name">[LINE_ITEM_3_NAME]</div>
+                <div class="item__amount">[LINE_ITEM_3_AMOUNT]</div>
+            </div>
+        </div>
+        <div class="totals">
+            <div class="totals__row totals__row--grand">
+                <div class="totals__label">Total project cost</div>
+                <div class="totals__value">[TOTAL_PROJECT_COST]</div>
+            </div>
+        </div>
+        <div class="due-now">
+            <div class="due-now__label">Due now ([DEPOSIT_PERCENTAGE] deposit)</div>
+            <div class="due-now__row">
+                <div class="due-now__title">Deposit</div>
+                <div class="due-now__amount">[DEPOSIT_AMOUNT]</div>
+            </div>
+            <div class="due-now__note">Balance of [BALANCE_DUE] due on project completion.</div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         PAY BUTTON - Stripe Payment Link
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Pay deposit</div>
+            <div class="eyebrow eyebrow--mute">Secure checkout</div>
+        </div>
+        <div class="pay">
+            <a href="[STRIPE_PAYMENT_LINK]" class="pay__button" target="_blank" rel="noopener">Pay [DEPOSIT_AMOUNT]</a>
+            <p class="pay__note">Secure payment processed by Stripe. Card, Apple Pay, Google Pay, and bank transfer supported. You'll receive a receipt automatically once the payment clears.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         BANK TRANSFER (secondary method)
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Bank transfer</div>
+            <div class="eyebrow eyebrow--mute">Alternative method</div>
+        </div>
+        <div class="bank">
+            <p class="bank__intro">If you'd prefer to pay by bank transfer, use the details below. Please reference invoice [INVOICE_NUMBER] on the transfer so I can match your payment.</p>
+            <div class="bank__details">
+                <div class="bank__row">
+                    <div class="bank__label">Account name</div>
+                    <div class="bank__value">[BANK_ACCOUNT_NAME]</div>
+                </div>
+                <div class="bank__row">
+                    <div class="bank__label">Account number</div>
+                    <div class="bank__value">[BANK_ACCOUNT_NUMBER]</div>
+                </div>
+                <div class="bank__row">
+                    <div class="bank__label">Sort code / routing</div>
+                    <div class="bank__value">[BANK_SORT_CODE]</div>
+                </div>
+                <div class="bank__row">
+                    <div class="bank__label">IBAN</div>
+                    <div class="bank__value">[BANK_IBAN]</div>
+                </div>
+                <div class="bank__row">
+                    <div class="bank__label">SWIFT / BIC</div>
+                    <div class="bank__value">[BANK_SWIFT]</div>
+                </div>
+                <div class="bank__row">
+                    <div class="bank__label">Reference</div>
+                    <div class="bank__value">[INVOICE_NUMBER]</div>
+                </div>
+            </div>
+            <p class="bank__note">[BANK_DETAILS_NOTE]</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         PAYMENT TERMS FOOTNOTE
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Payment terms</div>
+            <div class="eyebrow eyebrow--mute">Important</div>
+        </div>
+        <p class="terms-note">This deposit is non-refundable and secures your project dates in the calendar. Work on the project begins once the deposit has cleared. The balance of [BALANCE_DUE] is due on project completion as defined in the signed contract. Any questions about this invoice, reply to any email from me and I'll be happy to answer.</p>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <div class="invoice-footer">
+        <div class="invoice-footer__label">Invoice [INVOICE_NUMBER] / [CLIENT_BUSINESS_NAME]</div>
+        <div class="invoice-footer__label">[DESIGNER_BUSINESS_NAME] / [YEAR]</div>
+    </div>
+
+</div>
+
+</body>
+</html>

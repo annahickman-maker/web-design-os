@@ -1,0 +1,917 @@
+<!--
+---
+type: template
+slug: project-proposal-html
+status: active
+tags:
+  - type/template
+  - domain/workflow
+aliases:
+  - Project Proposal Template
+---
+
+# Project Proposal Template (HTML)
+
+An editorial-style single-page proposal in the Web Design OS system.
+Uses the same brand tokens and typography as the strategy deck and
+client portal.
+
+## Flow
+
+Proposal (this file) - client reads, clicks Accept -
+Contract (signs with signature_pad + Formsubmit) -
+Invoice (opens automatically after signing, client pays) -
+Project begins.
+
+The proposal itself has NO signature. It's a read-and-accept
+document. The signature lives on the contract page. When the
+contract is signed, the invoice opens. That's the full flow.
+
+## Placeholders to replace
+
+Core:
+- [CLIENT_NAME], [CLIENT_FIRST_NAME], [PROJECT_TYPE]
+- [DESIGNER_NAME], [DESIGNER_EMAIL], [YEAR], [DATE]
+- [PROPOSAL_ID] (unique string like "client-slug-proposal-01")
+
+Goals (from discovery call / brief):
+- [GOAL_1], [GOAL_2], [GOAL_3]
+
+Investment:
+- [INVESTMENT_AMOUNT] (the total project price)
+- [PAYMENT_INSTALLMENTS] (e.g. "2 installments" or "3 monthly payments")
+- [PACKAGE_NAME] (e.g. "Custom Brand & Web Design")
+- Deposit terms are hardcoded in the template as a 50% deposit. If
+  the designer uses different deposit terms, edit the investment
+  deposit note directly in this file during onboarding template review.
+
+Scope (DYNAMIC - generated from the brief, not boilerplate):
+- Each [SCOPE_*_ITEM_*] bullet is populated from what was discussed
+  in the discovery call + the designer's standard offer
+  (01_Core/core_offer.md). The three columns map to the designer's
+  standard delivery phases. workflow_create-proposal.md reads the
+  brief and generates appropriate bullets per client.
+
+Timeline:
+- [TIMELINE_TEXT]
+
+Testimonials (DYNAMIC - matched to current client):
+- [TESTIMONIAL_1_QUOTE], [TESTIMONIAL_1_NAME], [TESTIMONIAL_1_BUSINESS], [TESTIMONIAL_1_PORTFOLIO]
+- [TESTIMONIAL_2_QUOTE], [TESTIMONIAL_2_NAME], [TESTIMONIAL_2_BUSINESS], [TESTIMONIAL_2_PORTFOLIO]
+- Populated by reading `01_Core/core_testimonials.md` and matching
+  two entries whose project_type and client_type most closely align
+  with the current client. Pulled automatically by
+  workflow_create-proposal.md.
+
+Next step:
+- [CONTRACT_URL] - direct link to the contract HTML for this client
+
+## Testimonials bank
+
+The testimonial bank lives at `01_Core/core_testimonials.md` and is
+populated during onboarding (workflow_onboarding-testimonials.md).
+Each entry has: client name, business, industry, project type,
+testimonial quote, results summary, portfolio URL. The proposal
+workflow pulls the two most aligned entries for each new proposal.
+
+## Dynamic scope
+
+The Scope of Work section is NOT boilerplate. Every bullet is
+generated per client by workflow_create-proposal.md based on:
+1. The designer's standard offer (01_Core/core_offer.md)
+2. The client brief / discovery call notes
+3. Anything specific the client asked for
+
+The scope section below has three columns (Strategy / Website /
+Launch) matching the standard delivery phases. The bullets inside
+each column are placeholders that the workflow replaces with
+real, client-specific deliverables.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[CLIENT_NAME] - Project Proposal</title>
+
+<!-- BRAND_FONTS_START - Replaced per designer during onboarding template review -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- BRAND_FONTS_END -->
+
+<style>
+/* ============================================================
+   BRAND TOKENS - Designer brand, set during onboarding
+   Source: 01_Core/core_brand-visual.md
+   ============================================================ */
+:root {
+    --brand-serif: 'Fraunces', Georgia, serif;
+    --brand-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --brand-ink: #0A0A0A;
+    --brand-paper: #FAFAF7;
+    --brand-paper-pure: #FFFFFF;
+    --brand-accent: #0A0A0A;
+    --brand-name: '[DESIGNER_NAME]';
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --serif: var(--brand-serif);
+    --sans: var(--brand-sans);
+    --ink: var(--brand-ink);
+    --ink-soft: #1A1A1A;
+    --ink-mute: #666666;
+    --ink-faint: #999999;
+    --paper: var(--brand-paper);
+    --paper-pure: var(--brand-paper-pure);
+    --rule: var(--brand-ink);
+    --rule-soft: #E5E5E0;
+}
+
+html, body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern', 'liga', 'ss01';
+    line-height: 1.5;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ============================================================
+   PAGE CONTAINER
+   ============================================================ */
+.proposal {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 72px 64px 56px;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.display-xl {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+}
+
+.display-xl em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.display-lg {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.015em;
+}
+
+.display-md {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+}
+
+.display-md em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.heading {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+}
+
+.eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.eyebrow--mute { color: var(--ink-mute); }
+
+.lead {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    letter-spacing: -0.005em;
+    color: var(--ink-soft);
+    max-width: 720px;
+}
+
+.body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 680px;
+}
+
+.caption {
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   SECTIONS
+   Each section is boxed by its own top and bottom hairline with
+   tight internal padding. Space BETWEEN sections comes from the
+   margin-bottom so the page has a clear editorial rhythm.
+   ============================================================ */
+.section {
+    padding: 32px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 112px;
+}
+
+.section:last-of-type {
+    margin-bottom: 0;
+}
+
+.section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+    padding-bottom: 48px;
+}
+
+.hero__eyebrow {
+    margin-bottom: 20px;
+}
+
+.hero__title {
+    margin-bottom: 40px;
+}
+
+.hero__meta {
+    display: flex;
+    gap: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule-soft);
+    max-width: 720px;
+}
+
+.hero__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hero__meta-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.hero__meta-value {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+/* ============================================================
+   GOALS
+   ============================================================ */
+.goals {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.goal {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 20px;
+    align-items: baseline;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule-soft);
+}
+
+.goals .goal:first-child {
+    padding-top: 0;
+    border-top: none;
+}
+
+.goal__num {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: var(--ink-mute);
+}
+
+.goal__text {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+}
+
+/* ============================================================
+   INVESTMENT
+   ============================================================ */
+.investment {
+    display: flex;
+    flex-direction: column;
+}
+
+.investment__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+}
+
+.investment__package {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.005em;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule-soft);
+    margin-bottom: 24px;
+}
+
+.investment__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.investment__row {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+}
+
+.investment__row-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    min-width: 120px;
+}
+
+.investment__row-value {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+}
+
+.investment__deposit-note {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 560px;
+}
+
+/* ============================================================
+   SCOPE (Strategy / Website / Launch)
+   ============================================================ */
+.scope {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+}
+
+.scope-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.scope-block__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.scope-block__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.scope-block__item {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    padding-left: 16px;
+    position: relative;
+}
+
+.scope-block__item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 1px;
+    background: var(--ink);
+}
+
+/* ============================================================
+   TIMELINE
+   ============================================================ */
+.timeline {
+    font-family: var(--serif);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    max-width: 720px;
+}
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.testimonials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+}
+
+.testimonial {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+}
+
+.testimonial__quote {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.5;
+    color: var(--ink);
+}
+
+.testimonial__attribution {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.testimonial__name {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.testimonial__business {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+}
+
+.testimonial__link {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    align-self: flex-start;
+    margin-top: 4px;
+    transition: opacity 0.2s ease;
+}
+
+.testimonial__link:hover {
+    opacity: 0.6;
+}
+
+.testimonial__link::after {
+    content: ' \2192';
+    display: inline;
+}
+
+/* ============================================================
+   WHAT HAPPENS NEXT
+   ============================================================ */
+.next-body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 680px;
+    margin-bottom: 28px;
+}
+
+/* ============================================================
+   DOWNLOAD PDF BUTTON
+   Floats top-right, triggers window.print() which the browser
+   converts to PDF via the print dialog. Hidden in print output.
+   ============================================================ */
+.download-pdf {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    padding: 10px 18px;
+    transition: all 0.2s ease;
+}
+
+.download-pdf:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.download-pdf::after {
+    content: ' \2193';
+    display: inline;
+}
+
+/* ============================================================
+   PRINT STYLES - for browser print-to-PDF
+   ============================================================ */
+@media print {
+    html, body {
+        background: white;
+    }
+    .download-pdf,
+    .accept__button,
+    .accept__note {
+        display: none !important;
+    }
+    .proposal {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+    .section {
+        page-break-inside: avoid;
+        margin-bottom: 40px !important;
+    }
+    @page {
+        size: A4;
+        margin: 20mm;
+    }
+}
+
+/* ============================================================
+   ACCEPT BUTTON
+   Proposal acceptance simply links to the contract. Signature
+   happens on the contract, not here.
+   ============================================================ */
+.accept {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.accept__button {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--paper-pure);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 18px 40px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.accept__button:hover {
+    opacity: 0.85;
+}
+
+.accept__button::after {
+    content: ' \2192';
+    display: inline;
+}
+
+.accept__note {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.proposal-footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+}
+
+.proposal-footer__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 720px) {
+    .proposal {
+        padding: 48px 32px 40px;
+    }
+
+    .section__header,
+    .hero__meta,
+    .proposal-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .investment {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .investment__amount {
+        text-align: left;
+    }
+
+    .investment__structure {
+        text-align: left;
+    }
+
+    .scope {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .testimonials {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}
+</style>
+</head>
+<body>
+
+<button type="button" class="download-pdf" onclick="window.print();">Download PDF</button>
+
+<div class="proposal">
+
+    <!-- ============================================================
+         HERO
+         ============================================================ -->
+    <section class="hero">
+        <div class="hero__eyebrow eyebrow eyebrow--mute">Project Proposal</div>
+        <h1 class="hero__title display-xl">For <em>[CLIENT_NAME]</em></h1>
+        <div class="hero__meta">
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Prepared By</div>
+                <div class="hero__meta-value">[DESIGNER_NAME]</div>
+            </div>
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Date</div>
+                <div class="hero__meta-value">[DATE]</div>
+            </div>
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Project</div>
+                <div class="hero__meta-value">[PROJECT_TYPE]</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         GOALS
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Goals for this project</div>
+            <div class="eyebrow eyebrow--mute">What we're building toward</div>
+        </div>
+        <div class="goals">
+            <div class="goal">
+                <div class="goal__num">01</div>
+                <p class="goal__text">[GOAL_1]</p>
+            </div>
+            <div class="goal">
+                <div class="goal__num">02</div>
+                <p class="goal__text">[GOAL_2]</p>
+            </div>
+            <div class="goal">
+                <div class="goal__num">03</div>
+                <p class="goal__text">[GOAL_3]</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SCOPE - Strategy / Website / Launch
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Scope of work</div>
+            <div class="eyebrow eyebrow--mute">Three phases</div>
+        </div>
+        <div class="scope">
+            <div class="scope-block">
+                <div class="scope-block__label">Strategy</div>
+                <ul class="scope-block__list">
+                    <li class="scope-block__item">Brand strategy deck, mapped to your real audience</li>
+                    <li class="scope-block__item">Personas and customer journey from real buyers</li>
+                    <li class="scope-block__item">Messaging matched to your audience's awareness stage</li>
+                    <li class="scope-block__item">Sitemap where every page has a job</li>
+                </ul>
+            </div>
+            <div class="scope-block">
+                <div class="scope-block__label">Website</div>
+                <ul class="scope-block__list">
+                    <li class="scope-block__item">[PAGE_COUNT] page Framer site you can edit yourself</li>
+                    <li class="scope-block__item">Copywriting for every page, in your voice</li>
+                    <li class="scope-block__item">Built for Google and AI answer engines</li>
+                    <li class="scope-block__item">Forms, email list, and integrations all connected</li>
+                </ul>
+            </div>
+            <div class="scope-block">
+                <div class="scope-block__label">Launch</div>
+                <ul class="scope-block__list">
+                    <li class="scope-block__item">1-to-1 handover so you run your site confidently</li>
+                    <li class="scope-block__item">Training videos for every common edit</li>
+                    <li class="scope-block__item">All project files and assets organised and delivered</li>
+                    <li class="scope-block__item">[POST_LAUNCH_WEEKS] weeks of post launch support</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         INVESTMENT
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Investment</div>
+            <div class="eyebrow eyebrow--mute">Total for the project</div>
+        </div>
+        <div class="investment">
+            <div class="investment__label">Package</div>
+            <div class="investment__package">[PACKAGE_NAME]</div>
+            <div class="investment__rows">
+                <div class="investment__row">
+                    <div class="investment__row-label">Investment</div>
+                    <div class="investment__row-value">[INVESTMENT_AMOUNT]</div>
+                </div>
+                <div class="investment__row">
+                    <div class="investment__row-label">Payment</div>
+                    <div class="investment__row-value">[PAYMENT_INSTALLMENTS]</div>
+                </div>
+            </div>
+            <p class="investment__deposit-note">We'll take a 50% deposit at the beginning to reserve your project dates, and the remaining balance once the project is complete.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         TIMELINE
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Timeline</div>
+            <div class="eyebrow eyebrow--mute">Key dates</div>
+        </div>
+        <p class="timeline">[TIMELINE_TEXT]</p>
+    </section>
+
+    <!-- ============================================================
+         TESTIMONIALS
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Client results</div>
+            <div class="eyebrow eyebrow--mute">Past projects</div>
+        </div>
+        <div class="testimonials">
+            <figure class="testimonial">
+                <blockquote class="testimonial__quote">[TESTIMONIAL_1_QUOTE]</blockquote>
+                <figcaption class="testimonial__attribution">
+                    <span class="testimonial__name">[TESTIMONIAL_1_NAME]</span>
+                    <span class="testimonial__business">[TESTIMONIAL_1_BUSINESS]</span>
+                </figcaption>
+                <a href="[TESTIMONIAL_1_PORTFOLIO]" class="testimonial__link">View their site</a>
+            </figure>
+            <figure class="testimonial">
+                <blockquote class="testimonial__quote">[TESTIMONIAL_2_QUOTE]</blockquote>
+                <figcaption class="testimonial__attribution">
+                    <span class="testimonial__name">[TESTIMONIAL_2_NAME]</span>
+                    <span class="testimonial__business">[TESTIMONIAL_2_BUSINESS]</span>
+                </figcaption>
+                <a href="[TESTIMONIAL_2_PORTFOLIO]" class="testimonial__link">View their site</a>
+            </figure>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         WHAT HAPPENS NEXT
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">What happens next</div>
+            <div class="eyebrow eyebrow--mute">How to accept</div>
+        </div>
+        <p class="next-body">If you're happy with the details of this proposal, accept below and you'll move straight on to your contract. Any questions, reply to any email from me and I'll be happy to answer.</p>
+        <div class="accept">
+            <a href="[CONTRACT_URL]" class="accept__button">Accept and move to contract</a>
+            <p class="accept__note">You'll sign your contract on the next page, then your deposit invoice opens automatically.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <div class="proposal-footer">
+        <div class="proposal-footer__label">Proposal / [CLIENT_NAME]</div>
+        <div class="proposal-footer__label">[DESIGNER_NAME] / [YEAR]</div>
+    </div>
+
+</div>
+
+</body>
+</html>

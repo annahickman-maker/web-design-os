@@ -1,0 +1,1306 @@
+<!--
+---
+type: template
+slug: contract-html
+status: active
+tags:
+  - type/template
+  - domain/workflow
+aliases:
+  - Contract Template
+  - Contract Example
+---
+
+# Contract Template (HTML)
+
+The signed contract in the Web Design OS system. Opened after the
+client accepts the proposal. The client reads, types their legal
+name, draws their signature, checks the agreement box, and submits.
+On submission the form POSTs to Formsubmit.co which emails the
+designer the signed payload instantly. The designer saves the
+signed state to the client folder. After signing, the client is
+redirected to the deposit invoice.
+
+## Flow
+
+Proposal (accept) - Contract (this file - sign) - Invoice (pay) -
+Project begins.
+
+## DESIGNER DISCLAIMER - READ BEFORE USING
+
+This is a template only. It is not legal advice and must not be
+used with real clients as-is.
+
+Before you use this contract with any client, you are strongly
+advised to:
+
+1. Get a qualified lawyer in your jurisdiction to review it
+2. Adapt the clauses to your country's laws (US, UK, EU, AU, etc.
+   all have different contract requirements)
+3. Add any terms specific to your business, services, and risk
+   profile
+4. Replace this template entirely with your own lawyer-approved
+   contract, then add it back into the Web Design OS system
+
+The Web Design OS creators and distributors accept no liability
+for any legal outcomes arising from use of this template. The
+document in front of you is a framework and a starting point, not
+a finished legal instrument.
+
+The onboarding template review workflow will prompt you about this
+when you first set up your Web Design OS vault. If you haven't
+replaced this template with your own lawyer-approved version, do
+that before sending a contract to any client.
+
+## Placeholders to replace
+
+Core:
+- [CLIENT_NAME], [CLIENT_BUSINESS_NAME], [CLIENT_CONTACT_PERSON]
+- [DESIGNER_NAME], [DESIGNER_BUSINESS_NAME], [DESIGNER_EMAIL]
+- [YEAR], [DATE]
+- [CONTRACT_ID] (unique string like "client-slug-contract-01")
+
+Project:
+- [PROJECT_TYPE], [PAGE_COUNT]
+- [PROJECT_START_DATE], [PROJECT_END_DATE], [LAUNCH_DATE]
+- [TOTAL_COST], [PAYMENT_SCHEDULE], [DEPOSIT_AMOUNT]
+- [POST_LAUNCH_WEEKS]
+- [INVOICE_URL] (link to the deposit invoice - opens after signing)
+
+Legal:
+- [JURISDICTION] - country or state whose laws govern the contract.
+  Set this once during onboarding (e.g. "England and Wales", "the
+  State of California", "Australia"). Appears in the Governing Law
+  clause of the General Terms section.
+
+## Signature setup (one-time for the designer)
+
+1. Set [DESIGNER_EMAIL] in the form action URL at the bottom
+2. On first use, submit the contract yourself with dummy data to
+   trigger Formsubmit's email verification. Click the link in the
+   verification email.
+3. Formsubmit now accepts submissions for this email. Free forever.
+4. Optional: set [INVOICE_URL] to your generated invoice file so
+   Formsubmit redirects the client there after signing.
+
+After signing, signed state persists to localStorage keyed by
+CONTRACT_ID so reopening shows the confirmation instead of the
+blank form.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[CLIENT_NAME] - Contract</title>
+
+<!-- BRAND_FONTS_START - Replaced per designer during onboarding template review -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- BRAND_FONTS_END -->
+
+<style>
+/* ============================================================
+   BRAND TOKENS - Designer brand, set during onboarding
+   ============================================================ */
+:root {
+    --brand-serif: 'Fraunces', Georgia, serif;
+    --brand-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --brand-ink: #0A0A0A;
+    --brand-paper: #FAFAF7;
+    --brand-paper-pure: #FFFFFF;
+    --brand-accent: #0A0A0A;
+    --brand-name: '[DESIGNER_NAME]';
+}
+
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --serif: var(--brand-serif);
+    --sans: var(--brand-sans);
+    --ink: var(--brand-ink);
+    --ink-soft: #1A1A1A;
+    --ink-mute: #666666;
+    --ink-faint: #999999;
+    --paper: var(--brand-paper);
+    --paper-pure: var(--brand-paper-pure);
+    --rule: var(--brand-ink);
+    --rule-soft: #E5E5E0;
+}
+
+html, body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern', 'liga', 'ss01';
+    line-height: 1.5;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* ============================================================
+   PAGE CONTAINER
+   ============================================================ */
+.contract {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 72px 64px 56px;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.display-xl {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(48px, 7vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+}
+
+.display-xl em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.heading {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+}
+
+.eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.eyebrow--mute { color: var(--ink-mute); }
+
+.body {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink-soft);
+    max-width: 760px;
+}
+
+.body p + p {
+    margin-top: 14px;
+}
+
+.body strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+/* ============================================================
+   DOWNLOAD PDF BUTTON
+   Floats top-right, triggers window.print() for PDF export.
+   ============================================================ */
+.download-pdf {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    padding: 10px 18px;
+    transition: all 0.2s ease;
+}
+
+.download-pdf:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.download-pdf::after {
+    content: ' \2193';
+    display: inline;
+}
+
+/* ============================================================
+   PRINT STYLES - clean PDF export
+   ============================================================ */
+@media print {
+    html, body {
+        background: white;
+    }
+    .download-pdf,
+    .signature__clear,
+    .signature__submit,
+    .signature__canvas-hint,
+    .signature__confirmation-cta {
+        display: none !important;
+    }
+    .contract {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+    .section,
+    .signature {
+        page-break-inside: avoid;
+        margin-bottom: 40px !important;
+    }
+    .signature__canvas-wrap {
+        border: 1px solid #000;
+    }
+    @page {
+        size: A4;
+        margin: 20mm;
+    }
+}
+
+/* ============================================================
+   SECTIONS
+   Each section boxed by its own top + bottom hairline with tight
+   padding and generous gaps between sections. Matches the proposal
+   template rhythm.
+   ============================================================ */
+.section {
+    padding: 32px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 112px;
+}
+
+.section:last-of-type {
+    margin-bottom: 0;
+}
+
+.section__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+    padding-bottom: 48px;
+}
+
+.hero__eyebrow {
+    margin-bottom: 20px;
+}
+
+.hero__title {
+    margin-bottom: 40px;
+}
+
+.hero__meta {
+    display: flex;
+    gap: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule-soft);
+    max-width: 760px;
+    flex-wrap: wrap;
+}
+
+.hero__meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hero__meta-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.hero__meta-value {
+    font-family: var(--sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+}
+
+/* ============================================================
+   PARTIES - the two parties of the contract
+   ============================================================ */
+.parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+}
+
+.party__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+}
+
+.party__name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    margin-bottom: 6px;
+}
+
+.party__detail {
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   TERMS - numbered list of terms
+   ============================================================ */
+.terms {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.term {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 20px;
+    align-items: baseline;
+}
+
+.term__num {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    color: var(--ink-mute);
+}
+
+.term__text {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    max-width: 720px;
+}
+
+/* ============================================================
+   PAYMENT TABLE
+   ============================================================ */
+.payment {
+    display: flex;
+    flex-direction: column;
+}
+
+.payment__row {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule-soft);
+}
+
+.payment__row:last-child {
+    border-bottom: none;
+}
+
+.payment__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    min-width: 180px;
+}
+
+.payment__value {
+    font-family: var(--serif);
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+}
+
+/* ============================================================
+   DELIVERABLES - two columns (Website / Brand)
+   ============================================================ */
+.deliverables-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 56px;
+}
+
+.deliverables-block__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 16px;
+}
+
+.deliverables-block__list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.deliverables-block__item {
+    font-family: var(--sans);
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    padding-left: 16px;
+    position: relative;
+}
+
+.deliverables-block__item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px;
+    height: 1px;
+    background: var(--ink);
+}
+
+.deliverables__note {
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+    max-width: 760px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule-soft);
+    font-style: italic;
+}
+
+/* ============================================================
+   SIGNATURE SECTION
+   ============================================================ */
+.signature {
+    padding: 40px 0 32px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+}
+
+.signature__intro {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    margin-bottom: 36px;
+    max-width: 680px;
+}
+
+.signature__form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 760px;
+}
+
+.signature__field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.signature__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.signature__input {
+    font-family: var(--sans);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--ink);
+    padding: 10px 0;
+    outline: none;
+    width: 100%;
+}
+
+.signature__input:focus {
+    border-bottom-color: var(--ink);
+}
+
+.signature__input::placeholder {
+    color: var(--ink-faint);
+}
+
+.signature__canvas-wrap {
+    position: relative;
+    background: var(--paper-pure);
+    border: 1px solid var(--rule);
+    height: 180px;
+}
+
+.signature__canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: crosshair;
+    touch-action: none;
+}
+
+.signature__canvas-hint {
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    pointer-events: none;
+}
+
+.signature__clear {
+    align-self: flex-start;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.signature__clear:hover {
+    color: var(--ink);
+}
+
+.signature__agreement {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    cursor: pointer;
+}
+
+.signature__agreement input[type="checkbox"] {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 3px;
+    accent-color: var(--ink);
+    cursor: pointer;
+}
+
+.signature__agreement-text {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+}
+
+.signature__submit {
+    align-self: flex-start;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--paper-pure);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 18px 40px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.signature__submit:hover {
+    opacity: 0.85;
+}
+
+.signature__submit:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.signature__submit::after {
+    content: ' \2192';
+    display: inline;
+}
+
+.signature__confirmation {
+    display: none;
+    padding: 16px 0;
+}
+
+.signature__preview {
+    margin-top: 24px;
+    margin-bottom: 32px;
+    padding: 20px 24px;
+    background: var(--paper-pure);
+    border: 1px solid var(--rule);
+    max-width: 480px;
+}
+
+.signature__preview-label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+}
+
+.signature__preview-img {
+    max-width: 100%;
+    max-height: 120px;
+    display: block;
+}
+
+.signature__confirmation-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.signature__download {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: none;
+    border: 1px solid var(--ink);
+    padding: 18px 32px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.signature__download:hover {
+    background: var(--ink);
+    color: var(--paper-pure);
+}
+
+.signature__download::after {
+    content: ' \2193';
+    display: inline;
+}
+
+.signature__email-confirm {
+    font-family: var(--sans);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+    margin-top: 12px;
+}
+
+.signature__confirmation-title {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.015em;
+    margin-bottom: 20px;
+}
+
+.signature__confirmation-title em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.signature__confirmation-body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 28px;
+    max-width: 620px;
+}
+
+.signature__confirmation-meta {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 28px;
+}
+
+.signature__confirmation-cta {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--paper-pure);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 18px 40px;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+}
+
+.signature__confirmation-cta:hover {
+    opacity: 0.85;
+}
+
+.signature__confirmation-cta::after {
+    content: ' \2192';
+    display: inline;
+}
+
+.signature--signed .signature__form {
+    display: none;
+}
+
+.signature--signed .signature__confirmation {
+    display: block;
+}
+
+.signature--signed .signature__intro {
+    display: none;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.contract-footer {
+    margin-top: 72px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+}
+
+.contract-footer__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 720px) {
+    .contract {
+        padding: 48px 32px 40px;
+    }
+
+    .section__header,
+    .hero__meta,
+    .contract-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .parties,
+    .deliverables-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .payment__row {
+        flex-direction: column;
+        gap: 6px;
+    }
+}
+</style>
+</head>
+<body>
+
+<button type="button" class="download-pdf" onclick="window.print();">Download PDF</button>
+
+<div class="contract">
+
+    <!-- ============================================================
+         HERO
+         ============================================================ -->
+    <section class="hero">
+        <div class="hero__eyebrow eyebrow eyebrow--mute">Services Agreement</div>
+        <h1 class="hero__title display-xl"><em>Contract</em></h1>
+        <div class="hero__meta">
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Date</div>
+                <div class="hero__meta-value">[DATE]</div>
+            </div>
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Project</div>
+                <div class="hero__meta-value">[PROJECT_TYPE]</div>
+            </div>
+            <div class="hero__meta-item">
+                <div class="hero__meta-label">Total</div>
+                <div class="hero__meta-value">[TOTAL_COST]</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         PARTIES
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Parties</div>
+            <div class="eyebrow eyebrow--mute">Between</div>
+        </div>
+        <div class="parties">
+            <div class="party">
+                <div class="party__label">Service Provider</div>
+                <div class="party__name">[DESIGNER_BUSINESS_NAME]</div>
+                <div class="party__detail">[DESIGNER_NAME]</div>
+            </div>
+            <div class="party">
+                <div class="party__label">Client</div>
+                <div class="party__name">[CLIENT_BUSINESS_NAME]</div>
+                <div class="party__detail">[CLIENT_CONTACT_PERSON]</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SERVICES AND DELIVERABLES
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Services and deliverables</div>
+            <div class="eyebrow eyebrow--mute">What's included</div>
+        </div>
+        <div class="deliverables-grid">
+            <div class="deliverables-block">
+                <div class="deliverables-block__label">Strategy</div>
+                <ul class="deliverables-block__list">
+                    <li class="deliverables-block__item">Full brand strategy deck</li>
+                    <li class="deliverables-block__item">Customer personas and journey map</li>
+                    <li class="deliverables-block__item">Competitor and positioning analysis</li>
+                    <li class="deliverables-block__item">Messaging matched to audience awareness</li>
+                    <li class="deliverables-block__item">Sitemap and page-by-page strategy</li>
+                    <li class="deliverables-block__item">Creative direction (moodboard, typography, colour)</li>
+                </ul>
+            </div>
+            <div class="deliverables-block">
+                <div class="deliverables-block__label">Website</div>
+                <ul class="deliverables-block__list">
+                    <li class="deliverables-block__item">[PAGE_COUNT] unique page templates (a single template reused for multiple items, e.g. a blog post template, counts as one)</li>
+                    <li class="deliverables-block__item">Copywriting for every page, in your voice</li>
+                    <li class="deliverables-block__item">Contact and lead intake form integration</li>
+                    <li class="deliverables-block__item">On-page SEO and AIO optimisation</li>
+                    <li class="deliverables-block__item">Responsive design tested at desktop (1280px+), tablet (768px+), and mobile (375px+)</li>
+                    <li class="deliverables-block__item">Email list integration</li>
+                    <li class="deliverables-block__item">Short training videos (2 to 5 minutes each) covering the common edits you'll need</li>
+                    <li class="deliverables-block__item">[POST_LAUNCH_WEEKS] weeks of post launch technical support</li>
+                </ul>
+            </div>
+        </div>
+        <p class="deliverables__note">The exact page count and content will be agreed in the strategy meeting at the start of the project. Any additional pages or content outside this contract will be quoted separately and require written agreement from the Client before work begins.</p>
+    </section>
+
+    <!-- ============================================================
+         PAYMENT TERMS
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Payment terms</div>
+            <div class="eyebrow eyebrow--mute">Costs and schedule</div>
+        </div>
+        <div class="payment">
+            <div class="payment__row">
+                <div class="payment__label">Total cost</div>
+                <div class="payment__value">[TOTAL_COST]</div>
+            </div>
+            <div class="payment__row">
+                <div class="payment__label">Deposit</div>
+                <div class="payment__value">[DEPOSIT_AMOUNT] (non-refundable)</div>
+            </div>
+            <div class="payment__row">
+                <div class="payment__label">Payment schedule</div>
+                <div class="payment__value">[PAYMENT_SCHEDULE]</div>
+            </div>
+            <div class="payment__row">
+                <div class="payment__label">Project start</div>
+                <div class="payment__value">[PROJECT_START_DATE]</div>
+            </div>
+            <div class="payment__row">
+                <div class="payment__label">Launch date</div>
+                <div class="payment__value">[LAUNCH_DATE]</div>
+            </div>
+        </div>
+        <div class="body" style="margin-top: 24px;">
+            <p>The Client agrees to pay the non-refundable Deposit before the Service Provider begins any work on the project. The Deposit compensates the Service Provider for committing to the project and reserving dates in the calendar. The remaining balance is due per the payment schedule above.</p>
+            <p>If the project scope changes, or if the work involves more time than estimated, the Service Provider will inform the Client and both parties can renegotiate the cost. The Service Provider reserves the right to decline any work not detailed in the original scope.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         CLIENT RESPONSIBILITIES
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Client responsibilities</div>
+            <div class="eyebrow eyebrow--mute">What's expected of you</div>
+        </div>
+        <div class="terms">
+            <div class="term">
+                <div class="term__num">01</div>
+                <div class="term__text">Come prepared for every meeting and arrive on time and ready to participate.</div>
+            </div>
+            <div class="term">
+                <div class="term__num">02</div>
+                <div class="term__text">Communicate feedback and concerns transparently and as soon as possible. Early, honest communication is the fastest path to a successful project.</div>
+            </div>
+            <div class="term">
+                <div class="term__num">03</div>
+                <div class="term__text">Meet all due dates. Missed due dates affect the Service Provider's schedule and the schedules of other client projects.</div>
+            </div>
+            <div class="term">
+                <div class="term__num">04</div>
+                <div class="term__text">Respond to feedback requests within 3 working days. If feedback is not received within 3 working days, the project will automatically be put on hold. The original deadline terminates, a new deadline is established based on availability, and an additional rescheduling fee may apply.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         REVISIONS
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Revisions</div>
+            <div class="eyebrow eyebrow--mute">What's included</div>
+        </div>
+        <div class="body">
+            <p><strong>Included revisions.</strong> Two rounds of revisions are included at no extra charge, provided the changes do not substantially alter the original project scope, nature, or purpose, and provided final approval has not already been given. First round revisions are compiled on the day of the review meeting and delivered within 3 working days. Second round revisions are requested by the Client and delivered within 3 working days of the first round being completed.</p>
+            <p><strong>Substantive changes.</strong> If the Client requests changes that would reasonably require more than 8 additional hours of work (as assessed in good faith by the Service Provider), the Service Provider is entitled to issue a separate invoice and scope amendment. Work on the revised services does not begin until the new invoice and scope amendment are signed and paid.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         CANCELLATION
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Cancellation</div>
+            <div class="eyebrow eyebrow--mute">If either party ends the project</div>
+        </div>
+        <div class="body">
+            <p>Either party may terminate this agreement by giving 7 days' written notice if the working relationship is deemed unsatisfactory.</p>
+            <p>In the event of cancellation by either party, the Service Provider retains ownership of all copyrights and original artwork, and the non-refundable Deposit is retained by the Service Provider. The Client is responsible for paying for the percentage of work completed as of the date of cancellation, as reasonably assessed by the Service Provider using the project timeline, milestones, and deliverables schedule as the basis for calculation. Any third-party expenses already incurred (stock photography, fonts, plugins, hosting, etc.) are also payable by the Client.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         EXPENSES, CONFIDENTIALITY, COPYRIGHT
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">Expenses, confidentiality, copyright</div>
+            <div class="eyebrow eyebrow--mute">Additional terms</div>
+        </div>
+        <div class="body">
+            <p><strong>Expenses.</strong> The Client reimburses the Service Provider for all third-party expenses arising from the project, including but not limited to stock photography, fonts, icons, plugins, forms, and materials needed to complete the work. The Service Provider will consult the Client before purchasing any materials outside the service cost.</p>
+            <p><strong>Third-party assets.</strong> Any stock photography, fonts, icons, illustrations, plugins, or other third-party assets used in the project are licensed under the terms of the original provider and remain the property of those providers. The Client inherits the license rights granted where the license permits transfer, or must purchase their own license where it does not. A list of third-party assets used will be provided at handover.</p>
+            <p><strong>Confidentiality.</strong> Both parties may receive confidential information during the project, including passwords, logins, payment details, business strategy, financial information, and unreleased work. Neither party will share or use this information for any purpose outside this project, either during the project or for three years afterwards. Exceptions apply only where disclosure is required by law or court order.</p>
+            <p><strong>Copyright.</strong> Upon final payment, the Service Provider transfers copyright ownership of all originally created website deliverables, including visual design, text content, custom graphics, and code. All deliverables are wholly owned by the Service Provider prior to final payment. If the project is cancelled before completion, the Service Provider retains full ownership and no rights are granted to the Client.</p>
+            <p><strong>Client-provided content.</strong> The Client is responsible for providing any content they want included in the project (copy, images, videos, brand assets, login credentials for existing accounts) by the dates agreed in the project timeline. The Client warrants that they own or have valid licenses to all such materials and will indemnify the Service Provider against any third-party claims arising from their use. If the Client's content is not delivered on time, the project timeline shifts accordingly and additional rescheduling fees may apply.</p>
+            <p><strong>Portfolio rights.</strong> The Service Provider reserves the right to display the completed project in their portfolio, case studies, social media, and promotional materials, and to describe the Client as a past client. If the Client wishes to delay public disclosure (for example, for a private launch), they must request this in writing within 7 days of signing this contract.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         GENERAL TERMS
+         ============================================================ -->
+    <section class="section">
+        <div class="section__header">
+            <div class="eyebrow">General terms</div>
+            <div class="eyebrow eyebrow--mute">Legal clauses</div>
+        </div>
+        <div class="body">
+            <p><strong>Limitation of liability.</strong> The Service Provider's total liability for any claim arising from this agreement is limited to the total amount paid by the Client under this contract. The Service Provider is not liable for any indirect, consequential, or loss-of-profit damages, including lost revenue, lost business opportunities, reputational harm, or damages arising from third-party services or tools used in the project.</p>
+            <p><strong>Late payment.</strong> Invoices are due within 7 days of issue unless otherwise agreed in writing. Payments more than 14 days overdue incur a late fee of 5% of the outstanding amount per 30 days, and the Service Provider may suspend all work on the project until payment is received. Suspended work does not release the Client from their payment obligations.</p>
+            <p><strong>Force majeure.</strong> Neither party is liable for delays or failure to perform caused by events outside their reasonable control, including illness, natural disasters, pandemics, acts of government, internet outages, or failures of third-party services. The affected party will notify the other as soon as reasonably possible and both parties will work in good faith to reschedule the affected work.</p>
+            <p><strong>Governing law.</strong> This agreement is governed by the laws of [JURISDICTION]. Any dispute arising under this agreement will first be addressed through good-faith discussion between the parties, and if unresolved, submitted to mediation before any court proceedings are initiated.</p>
+            <p><strong>Entire agreement.</strong> This contract constitutes the entire agreement between the parties and supersedes any prior verbal or written agreements. Any amendments must be agreed in writing by both parties.</p>
+            <p><strong>Severability.</strong> If any clause of this contract is found to be invalid or unenforceable, the remaining clauses continue in full force and effect.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SIGNATURE
+         Wired to Formsubmit.co. Designer must verify their email
+         on first use. On submit, signed state persists to localStorage
+         keyed by CONTRACT_ID, the form POSTs to Formsubmit, and the
+         client is redirected to the invoice page via _next field.
+         ============================================================ -->
+    <section class="signature" id="signature-section" data-contract-id="[CONTRACT_ID]">
+        <div class="section__header">
+            <div class="eyebrow">Sign to accept</div>
+            <div class="eyebrow eyebrow--mute">Digital signature</div>
+        </div>
+        <p class="signature__intro">By signing below you're accepting every clause of this contract. Once signed, your deposit invoice will open automatically and the project starts when the deposit is paid.</p>
+        <form class="signature__form" id="signature-form" action="https://formsubmit.co/[DESIGNER_EMAIL]" method="POST">
+            <input type="hidden" name="_subject" value="Signed Contract - [CLIENT_BUSINESS_NAME]">
+            <input type="hidden" name="_captcha" value="false">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_next" value="[INVOICE_URL]">
+            <input type="hidden" name="_cc" id="cc_client_email">
+            <input type="hidden" name="_autoresponse" value="Thank you for signing your contract. A copy of the signed contract has been sent to this email address for your records. Your deposit invoice is ready at the link provided by your designer. Once the deposit is paid, your project will begin on the agreed start date. If you have any questions, reply to any email from your designer.">
+            <input type="hidden" name="contract_id" value="[CONTRACT_ID]">
+            <input type="hidden" name="client_business" value="[CLIENT_BUSINESS_NAME]">
+            <input type="hidden" name="client_contact" value="[CLIENT_CONTACT_PERSON]">
+            <input type="hidden" name="project_type" value="[PROJECT_TYPE]">
+            <input type="hidden" name="total_cost" value="[TOTAL_COST]">
+            <input type="hidden" name="deposit_amount" value="[DEPOSIT_AMOUNT]">
+            <input type="hidden" name="signed_at" id="signed_at">
+            <input type="hidden" name="user_agent" id="user_agent">
+            <input type="hidden" name="signature_data_url" id="signature_data_url">
+            <input type="hidden" name="document_hash" id="document_hash">
+
+            <div class="signature__field">
+                <label class="signature__label" for="signed_name">Full legal name</label>
+                <input class="signature__input" type="text" id="signed_name" name="signed_name" placeholder="Type your full name" required>
+            </div>
+
+            <div class="signature__field">
+                <label class="signature__label" for="signed_email">Your email address</label>
+                <input class="signature__input" type="email" id="signed_email" name="signed_email" placeholder="you@example.com" required>
+            </div>
+
+            <div class="signature__field">
+                <label class="signature__label" for="signed_title">Title at your company (optional)</label>
+                <input class="signature__input" type="text" id="signed_title" name="signed_title" placeholder="e.g. Founder, Director, Owner">
+            </div>
+
+            <div class="signature__field">
+                <label class="signature__label">Signature</label>
+                <div class="signature__canvas-wrap">
+                    <canvas class="signature__canvas" id="signature-canvas"></canvas>
+                    <span class="signature__canvas-hint">Draw your signature above</span>
+                </div>
+                <button type="button" class="signature__clear" id="signature-clear">Clear signature</button>
+            </div>
+
+            <label class="signature__agreement">
+                <input type="checkbox" id="signature-agree" name="agreed" required>
+                <span class="signature__agreement-text">I have read and agree to all the terms set out in this contract. I understand this is a legally binding agreement and that the non-refundable deposit reserves my project dates in the Service Provider's calendar.</span>
+            </label>
+
+            <button type="submit" class="signature__submit" id="signature-submit">Sign and open invoice</button>
+        </form>
+
+        <div class="signature__confirmation" id="signature-confirmation">
+            <h3 class="signature__confirmation-title"><em>Signed.</em> Thank you.</h3>
+            <p class="signature__confirmation-body">Your contract is signed. A copy has been emailed to you for your records. The deposit invoice is ready for you now, and once the deposit is paid I'll confirm your project start date and we'll begin the work.</p>
+            <p class="signature__confirmation-meta" id="signature-confirmation-meta"></p>
+
+            <div class="signature__preview" id="signature-preview">
+                <div class="signature__preview-label">Signature on file</div>
+                <img id="signature-preview-img" class="signature__preview-img" alt="Signature">
+            </div>
+
+            <p class="signature__email-confirm" id="signature-email-confirm"></p>
+
+            <div class="signature__confirmation-actions">
+                <a href="[INVOICE_URL]" class="signature__confirmation-cta">Open deposit invoice</a>
+                <button type="button" class="signature__download" onclick="window.print();">Download PDF copy</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         FOOTER
+         ============================================================ -->
+    <div class="contract-footer">
+        <div class="contract-footer__label">Contract / [CLIENT_BUSINESS_NAME]</div>
+        <div class="contract-footer__label">[DESIGNER_BUSINESS_NAME] / [YEAR]</div>
+    </div>
+
+</div>
+
+<!-- signature_pad.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@5.0.4/dist/signature_pad.umd.min.js"></script>
+
+<script>
+/* ============================================================
+   SIGNATURE MODULE
+   - Initialises signature_pad on the canvas (HiDPI aware)
+   - Restores signed state from localStorage if already signed
+   - On submit: validates, captures signature, fills hidden fields,
+     persists state, then lets the form POST to Formsubmit.co
+   - Formsubmit redirects to [INVOICE_URL] via the _next field
+   ============================================================ */
+(function() {
+    var section = document.getElementById('signature-section');
+    if (!section) return;
+
+    var contractId = section.getAttribute('data-contract-id') || 'contract';
+    var storageKey = 'wdos.signed.' + contractId;
+
+    var canvas = document.getElementById('signature-canvas');
+    var clearBtn = document.getElementById('signature-clear');
+    var form = document.getElementById('signature-form');
+    var submitBtn = document.getElementById('signature-submit');
+    var confirmationMeta = document.getElementById('signature-confirmation-meta');
+    var previewImg = document.getElementById('signature-preview-img');
+    var previewWrap = document.getElementById('signature-preview');
+    var emailConfirm = document.getElementById('signature-email-confirm');
+    var ccField = document.getElementById('cc_client_email');
+
+    /* HiDPI canvas setup */
+    function resizeCanvas() {
+        var ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext('2d').scale(ratio, ratio);
+        if (window.signaturePad) window.signaturePad.clear();
+    }
+
+    /* Initialise signature_pad */
+    if (typeof SignaturePad !== 'undefined') {
+        window.signaturePad = new SignaturePad(canvas, {
+            backgroundColor: 'rgba(255,255,255,0)',
+            penColor: getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#0A0A0A',
+            minWidth: 0.5,
+            maxWidth: 2.0
+        });
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+    }
+
+    /* Restore signed state if this contract has already been signed */
+    var savedState = null;
+    try {
+        savedState = JSON.parse(localStorage.getItem(storageKey) || 'null');
+    } catch (e) {}
+
+    if (savedState && savedState.signedAt) {
+        section.classList.add('signature--signed');
+        var signedDate = new Date(savedState.signedAt);
+        confirmationMeta.textContent = 'Signed by ' + savedState.name + ' / ' + signedDate.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+        if (savedState.signatureDataUrl && previewImg) {
+            previewImg.src = savedState.signatureDataUrl;
+        } else if (previewWrap) {
+            previewWrap.style.display = 'none';
+        }
+        if (savedState.email && emailConfirm) {
+            emailConfirm.textContent = 'A signed copy has been emailed to ' + savedState.email;
+        }
+    }
+
+    /* Clear button */
+    clearBtn.addEventListener('click', function() {
+        if (window.signaturePad) window.signaturePad.clear();
+    });
+
+    /* Submit handler */
+    form.addEventListener('submit', function(e) {
+        if (!window.signaturePad || window.signaturePad.isEmpty()) {
+            e.preventDefault();
+            alert('Please draw your signature before submitting.');
+            return;
+        }
+
+        var signedName = document.getElementById('signed_name').value.trim();
+        var signedEmail = document.getElementById('signed_email').value.trim();
+        if (!signedName || !signedEmail) {
+            e.preventDefault();
+            return;
+        }
+
+        var now = new Date().toISOString();
+        var signatureDataUrl = window.signaturePad.toDataURL('image/png');
+
+        document.getElementById('signed_at').value = now;
+        document.getElementById('user_agent').value = navigator.userAgent;
+        document.getElementById('signature_data_url').value = signatureDataUrl;
+        document.getElementById('document_hash').value = hashString(contractId + '|' + signedName + '|' + now);
+
+        /* Set the _cc field to the client's email so Formsubmit sends
+           the signed payload to BOTH the designer and the client. */
+        if (ccField) {
+            ccField.value = signedEmail;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+
+        /* Persist signed state locally so reopening the contract
+           shows the confirmation state (with signature image and
+           email confirmation) instead of the blank pad. */
+        try {
+            localStorage.setItem(storageKey, JSON.stringify({
+                name: signedName,
+                email: signedEmail,
+                signedAt: now,
+                signatureDataUrl: signatureDataUrl
+            }));
+        } catch (err) {}
+
+        /* Let the form POST to Formsubmit. Formsubmit will email
+           the signed payload to the designer AND CC the client,
+           then redirect the client to the invoice via _next. */
+    });
+
+    /* Tiny non-cryptographic hash for stable document fingerprint */
+    function hashString(str) {
+        var hash = 0, i, chr;
+        for (i = 0; i < str.length; i++) {
+            chr = str.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0;
+        }
+        return 'h' + Math.abs(hash).toString(16);
+    }
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1147 @@
+<!--
+    Web Design OS - Client Dashboard
+    ================================
+    Notion-inspired kanban view of every client in 04_Clients/.
+
+    Populated by workflow_dashboard.md, which reads every client's
+    project-state.md, groups by Pipeline State, and renders the
+    kanban + Needs Attention panel.
+
+    Brand tokens (fonts, colors, logo) are injected from
+    01_Core/core_brand-visual.md via workflow_onboarding-brand-visual.md.
+    Leave the BRAND_FONTS and BRAND TOKENS blocks alone when
+    populating per-designer data - only client cards and action
+    items are regenerated per refresh.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[DESIGNER_NAME] - Client Dashboard</title>
+
+<!-- BRAND_FONTS_START - Replaced per designer during onboarding template review -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<!-- BRAND_FONTS_END -->
+
+<style>
+/* ============================================================
+   BRAND TOKENS - Designer brand, set during onboarding
+   Source: 01_Core/core_brand-visual.md
+   ============================================================ */
+:root {
+    --brand-serif: 'Fraunces', Georgia, serif;
+    --brand-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --brand-ink: #1A1A19;
+    --brand-paper: #FFFFFF;
+    --brand-paper-pure: #FFFFFF;
+    --brand-accent: #1A1A19;
+    --brand-muted: #EBEBE8;
+    --brand-surface: #F7F7F4;
+    --brand-name: '[DESIGNER_NAME]';
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --ink: var(--brand-ink);
+    --ink-soft: #2E2E2C;
+    --ink-mute: #6B6B66;
+    --ink-faint: #A3A39D;
+    --paper: var(--brand-paper);
+    --paper-pure: var(--brand-paper-pure);
+    --surface: var(--brand-surface);
+    --muted: var(--brand-muted);
+    --accent: var(--brand-accent);
+    --rule: #E8E8E4;
+    --rule-strong: #1A1A19;
+    --urgent: #C0392B;
+    --high: #D97706;
+    --normal: #1A1A19;
+    --low: #6B6B66;
+}
+
+html, body {
+    font-family: var(--brand-sans);
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern', 'liga', 'ss01';
+    line-height: 1.5;
+}
+
+body {
+    min-height: 100vh;
+    padding: 40px 48px 80px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 24px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.header__left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.header__eyebrow {
+    font-family: var(--brand-sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.header__title {
+    font-family: var(--brand-serif);
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
+
+.header__title em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.header__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    text-align: right;
+}
+
+.header__date {
+    font-size: 13px;
+    color: var(--ink-mute);
+}
+
+.header__count {
+    font-family: var(--brand-serif);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--ink);
+}
+
+.header__count strong {
+    font-weight: 500;
+}
+
+/* ============================================================
+   NEEDS ATTENTION PANEL
+   ============================================================ */
+.attention {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 48px;
+}
+
+.attention__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.attention__title {
+    font-family: var(--brand-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.attention__count {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+}
+
+.attention__groups {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.attention__group {
+    display: block;
+    border-bottom: 1px solid var(--rule);
+}
+
+.attention__group:last-child {
+    border-bottom: none;
+}
+
+.attention__group-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 4px;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    transition: background 0.12s ease;
+}
+
+.attention__group-header::-webkit-details-marker {
+    display: none;
+}
+
+.attention__group-header:hover {
+    background: rgba(0,0,0,0.02);
+}
+
+.attention__group-chevron {
+    font-size: 12px;
+    color: var(--ink-faint);
+    width: 10px;
+    display: inline-flex;
+    justify-content: center;
+    transition: transform 0.18s ease, color 0.12s ease;
+}
+
+.attention__group[open] .attention__group-chevron {
+    transform: rotate(90deg);
+    color: var(--ink);
+}
+
+.attention__group-name {
+    font-family: var(--brand-sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.attention__group-count {
+    font-family: var(--brand-sans);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 99px;
+    padding: 1px 8px;
+    line-height: 1.4;
+}
+
+.attention__group-preview {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.attention__group-preview[data-overdue="true"] {
+    color: var(--urgent);
+    font-weight: 500;
+}
+
+.attention__group[data-max-priority="urgent"] .attention__group-name {
+    color: var(--urgent);
+}
+
+.attention__group[data-max-priority="high"] .attention__group-name {
+    color: var(--high);
+}
+
+.attention__group-items {
+    display: flex;
+    flex-direction: column;
+    padding: 0 4px 12px 22px;
+}
+
+.attention__item {
+    display: grid;
+    grid-template-columns: 12px 1fr auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 9px 4px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13.5px;
+    transition: background 0.12s ease;
+}
+
+.attention__group-items .attention__item:last-child {
+    border-bottom: none;
+}
+
+.attention__item:hover {
+    background: rgba(0,0,0,0.02);
+}
+
+.attention__overflow {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+    font-size: 11px;
+    color: var(--ink-mute);
+    text-align: center;
+    font-style: italic;
+}
+
+.attention__priority {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--normal);
+}
+
+.attention__item[data-priority="urgent"] .attention__priority {
+    background: var(--urgent);
+}
+
+.attention__item[data-priority="high"] .attention__priority {
+    background: var(--high);
+}
+
+.attention__item[data-priority="low"] .attention__priority {
+    background: var(--low);
+    opacity: 0.5;
+}
+
+.attention__text {
+    color: var(--ink);
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.attention__client {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    white-space: nowrap;
+    text-decoration: none;
+    transition: border-color 0.12s ease;
+}
+
+.attention__client:hover {
+    border-color: var(--ink);
+}
+
+.attention__due {
+    font-size: 12px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.attention__due[data-overdue="true"] {
+    color: var(--urgent);
+    font-weight: 500;
+}
+
+.attention__empty {
+    padding: 24px 4px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-mute);
+    font-style: italic;
+}
+
+/* ============================================================
+   PIPELINE SECTIONS (two rows: Leads + Projects)
+   ============================================================ */
+.pipeline {
+    margin-bottom: 32px;
+}
+
+.pipeline__label {
+    font-family: var(--brand-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+    padding-left: 2px;
+}
+
+.kanban {
+    display: grid;
+    gap: 16px;
+    overflow-x: auto;
+}
+
+.kanban--leads {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.kanban--projects {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.column {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 16px 12px 20px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.column__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0 4px 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.column__title {
+    font-family: var(--brand-sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.column__count {
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    background: var(--paper);
+    padding: 2px 8px;
+    border-radius: 99px;
+    border: 1px solid var(--rule);
+}
+
+.column__cards {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.column__empty {
+    padding: 16px 4px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-style: italic;
+}
+
+/* ============================================================
+   CARD
+   ============================================================ */
+.card {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 14px 14px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.12s ease, transform 0.12s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    border-color: var(--ink);
+    transform: translateY(-1px);
+}
+
+.card__name {
+    font-family: var(--brand-sans);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+}
+
+.card__business {
+    font-size: 12px;
+    color: var(--ink-mute);
+    line-height: 1.35;
+    margin-top: -4px;
+}
+
+.card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.card__tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ink-mute);
+    text-transform: lowercase;
+}
+
+.card__tag--path {
+    background: var(--paper);
+}
+
+.card__progress {
+    margin-top: 4px;
+}
+
+.card__progress-bar {
+    height: 3px;
+    background: var(--muted);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.card__progress-fill {
+    height: 100%;
+    background: var(--ink);
+    border-radius: 99px;
+    transition: width 0.2s ease;
+}
+
+.card__progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--ink-mute);
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+}
+
+.card__next {
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule);
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.card__next::before {
+    content: '→';
+    color: var(--ink-mute);
+    flex-shrink: 0;
+}
+
+.card__next[data-priority="urgent"] {
+    color: var(--urgent);
+    font-weight: 500;
+}
+
+.card__next[data-priority="high"] {
+    color: var(--high);
+}
+
+/* Leads row cards are minimal - tighter padding, smaller type,
+   less vertical space. Path tag sits inline with the client
+   name to condense the card further. Projects row cards stay
+   at full size. */
+.kanban--leads .card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto auto;
+    column-gap: 8px;
+    row-gap: 2px;
+    padding: 10px 12px;
+    align-items: start;
+}
+
+.kanban--leads .card__name {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 13px;
+    align-self: center;
+}
+
+.kanban--leads .card__meta {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0;
+    align-self: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+.kanban--leads .card__business {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 11px;
+    margin-top: 0;
+}
+
+.kanban--leads .card__next {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 4px;
+    padding-top: 6px;
+    font-size: 10.5px;
+}
+
+.kanban--leads .card__tag {
+    padding: 1px 7px;
+    font-size: 9.5px;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+    margin-top: 64px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--ink-faint);
+    letter-spacing: 0.04em;
+}
+
+.footer__left::before {
+    content: var(--brand-name);
+    text-transform: uppercase;
+}
+
+.footer__right {
+    font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1400px) {
+    .kanban--projects {
+        grid-template-columns: repeat(2, minmax(260px, 1fr));
+    }
+}
+
+/* ============================================================
+   ARCHIVE TOGGLE (inline expand/collapse)
+   ============================================================ */
+.archive {
+    margin-top: 40px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.archive[open] {
+    border-color: var(--rule-strong, #D0D0CA);
+}
+
+.archive__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.12s ease;
+    user-select: none;
+}
+
+.archive__summary::-webkit-details-marker {
+    display: none;
+}
+
+.archive__summary:hover {
+    background: var(--surface);
+}
+
+.archive__left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.archive__icon {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: var(--ink-mute);
+}
+
+.archive__label {
+    font-family: var(--brand-sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.archive__sub {
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.02em;
+    margin-top: 2px;
+}
+
+.archive__right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.archive__count {
+    font-family: var(--brand-serif);
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.archive__chevron {
+    font-size: 14px;
+    color: var(--ink-mute);
+    transition: transform 0.18s ease, color 0.12s ease;
+}
+
+.archive[open] .archive__chevron {
+    transform: rotate(90deg);
+    color: var(--ink);
+}
+
+.archive__list {
+    border-top: 1px solid var(--rule);
+    padding: 8px 24px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.archive__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    align-items: center;
+    gap: 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.12s ease;
+}
+
+.archive__row:last-child {
+    border-bottom: none;
+}
+
+.archive__row:hover {
+    background: var(--surface);
+}
+
+.archive__row-name {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.archive__row-client {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.005em;
+}
+
+.archive__row-business {
+    font-size: 11px;
+    color: var(--ink-mute);
+}
+
+.archive__row-project {
+    font-size: 11px;
+    color: var(--ink-soft);
+}
+
+.archive__row-date {
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.archive__row-arrow {
+    font-size: 12px;
+    color: var(--ink-faint);
+    transition: color 0.12s ease, transform 0.12s ease;
+}
+
+.archive__row:hover .archive__row-arrow {
+    color: var(--ink);
+    transform: translateX(2px);
+}
+
+.archive__empty {
+    padding: 24px 0 8px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--ink-mute);
+    font-style: italic;
+}
+
+@media (max-width: 860px) {
+    body {
+        padding: 24px 16px 60px;
+    }
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    .header__meta {
+        align-items: flex-start;
+        text-align: left;
+    }
+    .header__title {
+        font-size: 32px;
+    }
+    .kanban--leads,
+    .kanban--projects {
+        grid-template-columns: 1fr;
+    }
+    .attention__item {
+        grid-template-columns: 12px 1fr;
+        gap: 10px;
+    }
+    .attention__client,
+    .attention__due {
+        grid-column: 2;
+        justify-self: start;
+    }
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+    body {
+        padding: 20px;
+        max-width: none;
+    }
+    .card:hover {
+        transform: none;
+    }
+    .kanban--leads {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    .kanban--projects {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header__left">
+        <div class="header__eyebrow">Client Dashboard</div>
+        <h1 class="header__title">Your <em>studio</em>, at a glance</h1>
+    </div>
+    <div class="header__meta">
+        <div class="header__date">[DATE]</div>
+        <div class="header__count"><strong>[TOTAL_ACTIVE_COUNT]</strong> active clients</div>
+    </div>
+</header>
+
+<!-- ============================================================
+     NEEDS ATTENTION PANEL
+     Populated from every client's project-state.md Next Actions
+     section. Grouped by category so the designer can batch
+     similar work across multiple clients ("let's do all
+     revisions today"). Groups sorted by highest priority.
+     ============================================================ -->
+<section class="attention">
+    <div class="attention__header">
+        <div class="attention__title">Needs attention</div>
+        <div class="attention__count">[ATTENTION_COUNT] items</div>
+    </div>
+    <div class="attention__groups">
+        <!-- ATTENTION_GROUPS_START
+             One <details class="attention__group"> per category
+             that has at least one item. Collapsed by default so
+             the panel is a scan-first view. Click a heading to
+             expand the items. Empty categories are skipped.
+
+             <details class="attention__group" data-max-priority="urgent">
+                 <summary class="attention__group-header">
+                     <span class="attention__group-chevron">›</span>
+                     <span class="attention__group-name">Revisions</span>
+                     <span class="attention__group-count">2</span>
+                     <span class="attention__group-preview" data-overdue="true">[TOP_PREVIEW_LABEL]</span>
+                 </summary>
+                 <div class="attention__group-items">
+                     <div class="attention__item" data-priority="urgent">
+                         <span class="attention__priority"></span>
+                         <span class="attention__text">[ACTION_TEXT]</span>
+                         <a class="attention__client" href="../[client-slug]/">[CLIENT_NAME]</a>
+                         <span class="attention__due" data-overdue="true">[DUE_LABEL]</span>
+                     </div>
+                     ... more items ...
+                 </div>
+             </details>
+
+             TOP_PREVIEW_LABEL is the due label of the
+             highest-priority, earliest-due item in the group -
+             e.g. "Overdue by 2 days" or "Today" or "Tomorrow" -
+             so the collapsed row still tells the designer when
+             the most pressing thing is due without opening it.
+
+             If zero items across all groups, render the empty
+             state below instead.
+        -->
+        <div class="attention__empty">Nothing urgent. Good place to be.</div>
+        <!-- ATTENTION_GROUPS_END -->
+    </div>
+</section>
+
+<!-- ============================================================
+     PIPELINE - ROW 1: LEADS
+     3 columns: lead, qualified, proposal sent
+     ============================================================ -->
+<section class="pipeline">
+    <div class="pipeline__label">Leads</div>
+    <div class="kanban kanban--leads">
+
+        <!-- COLUMN: LEAD -->
+        <div class="column" data-state="lead">
+            <div class="column__header">
+                <div class="column__title">Lead</div>
+                <div class="column__count">[LEAD_COUNT]</div>
+            </div>
+            <div class="column__cards">
+                <!-- LEAD_CARDS_START -->
+                <div class="column__empty">No leads</div>
+                <!-- LEAD_CARDS_END -->
+            </div>
+        </div>
+
+        <!-- COLUMN: QUALIFIED -->
+        <div class="column" data-state="qualified">
+            <div class="column__header">
+                <div class="column__title">Qualified</div>
+                <div class="column__count">[QUALIFIED_COUNT]</div>
+            </div>
+            <div class="column__cards">
+                <!-- QUALIFIED_CARDS_START -->
+                <div class="column__empty">None qualified</div>
+                <!-- QUALIFIED_CARDS_END -->
+            </div>
+        </div>
+
+        <!-- COLUMN: PROPOSAL SENT -->
+        <div class="column" data-state="proposal-sent">
+            <div class="column__header">
+                <div class="column__title">Proposal sent</div>
+                <div class="column__count">[PROPOSAL_SENT_COUNT]</div>
+            </div>
+            <div class="column__cards">
+                <!-- PROPOSAL_SENT_CARDS_START -->
+                <div class="column__empty">No open proposals</div>
+                <!-- PROPOSAL_SENT_CARDS_END -->
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================================
+     PIPELINE - ROW 2: PROJECTS
+     4 columns: strategy, design, revisions, launched
+     ============================================================ -->
+<section class="pipeline">
+    <div class="pipeline__label">Projects</div>
+    <div class="kanban kanban--projects">
+
+        <!-- COLUMN: STRATEGY -->
+        <div class="column" data-state="strategy">
+            <div class="column__header">
+                <div class="column__title">Strategy</div>
+                <div class="column__count">[STRATEGY_COUNT]</div>
+            </div>
+            <div class="column__cards">
+                <!-- STRATEGY_CARDS_START -->
+                <div class="column__empty">None in strategy</div>
+                <!-- STRATEGY_CARDS_END -->
+            </div>
+        </div>
+
+        <!-- COLUMN: DESIGN -->
+        <div class="column" data-state="design">
+            <div class="column__header">
+                <div class="column__title">Design</div>
+                <div class="column__count">[DESIGN_COUNT]</div>
+            </div>
+            <div class="column__cards">
+                <!-- DESIGN_CARDS_START -->
+                <div class="column__empty">None in design</div>
+                <!-- DESIGN_CARDS_END -->
+            </div>
+        </div>
+
+        <!-- COLUMN: REVISIONS -->
+        <div class="column" data-state="revisions">
+            <div class="column__header">
+                <div class="column__title">Revisions</div>
+                <div class="column__count">[REVISIONS_COUNT]</div>
+            </div>
+            <div class="column__cards">
+                <!-- REVISIONS_CARDS_START -->
+                <div class="column__empty">None in revisions</div>
+                <!-- REVISIONS_CARDS_END -->
+            </div>
+        </div>
+
+        <!-- COLUMN: LAUNCHED -->
+        <div class="column" data-state="launched">
+            <div class="column__header">
+                <div class="column__title">Launched</div>
+                <div class="column__count">[LAUNCHED_COUNT]</div>
+            </div>
+            <div class="column__cards">
+                <!-- LAUNCHED_CARDS_START -->
+                <div class="column__empty">Nothing launched yet</div>
+                <!-- LAUNCHED_CARDS_END -->
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============================================================
+     ARCHIVE TOGGLE
+     Collapsed by default. Clicking the summary expands an
+     inline list of every archived client. No separate page.
+     Uses the native <details> element for zero-JS behavior.
+     ============================================================ -->
+<details class="archive">
+    <summary class="archive__summary">
+        <div class="archive__left">
+            <div class="archive__icon">▣</div>
+            <div>
+                <div class="archive__label">Archive</div>
+                <div class="archive__sub">Past clients, closed projects</div>
+            </div>
+        </div>
+        <div class="archive__right">
+            <div class="archive__count">[ARCHIVED_COUNT]</div>
+            <div class="archive__chevron">›</div>
+        </div>
+    </summary>
+    <div class="archive__list">
+        <!-- ARCHIVE_ROWS_START
+             Populated by workflow_dashboard.md. Each archived
+             client is one row. Sorted by archived date (most
+             recent first).
+
+             <a class="archive__row" href="[client-slug]/">
+                 <div class="archive__row-name">
+                     <span class="archive__row-client">[CLIENT_NAME]</span>
+                     <span class="archive__row-business">[CLIENT_BUSINESS]</span>
+                 </div>
+                 <div class="archive__row-project">[PROJECT_TYPE]</div>
+                 <div class="archive__row-date">[ARCHIVED_DATE]</div>
+                 <div class="archive__row-arrow">→</div>
+             </a>
+
+             If the archive is empty, render the empty state below.
+        -->
+        <div class="archive__empty">No archived clients yet. When you close out a project, update its Pipeline State to "archived" and it'll show up here.</div>
+        <!-- ARCHIVE_ROWS_END -->
+    </div>
+</details>
+
+<footer class="footer">
+    <div class="footer__left"></div>
+    <div class="footer__right">Generated [DATE] / Web Design OS</div>
+</footer>
+
+<!--
+    Card reference markup - workflow_dashboard.md uses this exact
+    shape when populating a column. Do not render this block.
+
+    <a class="card" href="[client-slug]/workspace.html">
+        <div class="card__name">[CLIENT_NAME]</div>
+        <div class="card__business">[CLIENT_BUSINESS]</div>
+        <div class="card__meta">
+            <span class="card__tag card__tag--path">[PATH]</span>
+            <span class="card__tag">[PROJECT_TYPE]</span>
+        </div>
+        <div class="card__progress">
+            <div class="card__progress-bar">
+                <div class="card__progress-fill" style="width: [PERCENT]%;"></div>
+            </div>
+            <div class="card__progress-label">
+                <span>[MILESTONES_DONE]/[MILESTONES_TOTAL] milestones</span>
+                <span>[PERCENT]%</span>
+            </div>
+        </div>
+        <div class="card__next" data-priority="[PRIORITY]">[NEXT_ACTION_TEXT]</div>
+    </a>
+
+    Notes:
+    - .card__progress block is only rendered for contract-signed clients
+    - .card__next is only rendered if the client has a pending action
+    - Cards in lead / qualified / delivered / archived columns are
+      minimal: name, business, path tag, next action (if any)
+    - Cards in proposal-sent show the days-since-sent as a tag
+    - Cards in contract-signed show progress bar + next action
+-->
+
+</body>
+</html>

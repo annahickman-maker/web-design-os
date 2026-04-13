@@ -1,0 +1,2555 @@
+<!--
+---
+type: template
+slug: strategy-deck-html
+status: active
+tags:
+  - type/template
+  - domain/strategy
+---
+
+Web Design OS - Strategy Deck Template (v2)
+
+Elevated editorial-style brand strategy deck. Populate the placeholders with client data and drop curated images into the /assets folder.
+
+## Image slot convention
+
+Place images in `assets/` relative to this HTML file. The template expects:
+- assets/cover.jpg (full-bleed hero, landscape)
+- assets/contents.jpg (portrait or square, for contents page)
+- assets/section-identity.jpg (full-bleed, landscape)
+- assets/section-audience.jpg (full-bleed, landscape)
+- assets/section-marketing.jpg (full-bleed, landscape)
+- assets/section-website.jpg (full-bleed, landscape)
+- assets/section-creative.jpg (full-bleed, landscape)
+- assets/identity-accent.jpg (landscape, inspirational)
+- assets/set-apart.jpg (landscape, positioning hero image)
+- assets/competitor-1.jpg (portrait or landscape, one per competitor page)
+- assets/competitor-2.jpg (portrait or landscape, one per competitor page)
+- assets/competitor-3.jpg (portrait or landscape, one per competitor page)
+- assets/persona-1.jpg (portrait, cinematic)
+- assets/persona-2.jpg (portrait, cinematic)
+- assets/moodboard-01.jpg through moodboard-09.jpg (mixed aspect ratios, 9 images)
+
+All images are optional. Empty states are handled elegantly - the deck still looks refined without them.
+
+## Placeholders to replace
+
+All text in [SQUARE_BRACKETS] should be replaced with real content from the client's strategy outputs.
+
+## Usage
+
+1. Copy this file to the client's deliverables folder
+2. Create an `assets/` folder alongside it
+3. Add curated images (or skip - works without them)
+4. Replace all [PLACEHOLDERS] with real content
+5. Open in a browser to preview
+6. Export to PDF via browser print if needed
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>[CLIENT_NAME] - Brand Strategy</title>
+
+<!-- BRAND_FONTS_START - Replaced per designer during onboarding template review -->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- BRAND_FONTS_END -->
+
+<style>
+/* ============================================================
+   BRAND TOKENS - Designer brand, set during onboarding
+   Source: 01_Core/core_brand-visual.md
+   ============================================================ */
+:root {
+    /* Brand fonts - defaults match the editorial master template */
+    --brand-serif: 'Fraunces', Georgia, serif;
+    --brand-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+    /* Brand surface colors - defaults are pure editorial B&W.
+       Override only if the designer's brand calls for a warmer paper or
+       shifted ink. Keep contrast high. */
+    --brand-ink: #0A0A0A;
+    --brand-paper: #FAFAF7;
+    --brand-paper-pure: #FFFFFF;
+
+    /* Brand accent - reserved token. Defaults to ink so no accent color
+       appears unless the designer explicitly turns it on. */
+    --brand-accent: #0A0A0A;
+
+    /* Designer identity - shown on cover and closing */
+    --brand-name: '[DESIGNER_NAME]';
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --serif: var(--brand-serif);
+    --sans: var(--brand-sans);
+    --ink: var(--brand-ink);
+    --ink-soft: #1A1A1A;
+    --ink-mute: #666666;
+    --ink-faint: #999999;
+    --paper: var(--brand-paper);
+    --paper-pure: var(--brand-paper-pure);
+    --rule: var(--brand-ink);
+    --rule-soft: #E5E5E0;
+    --page-w: 1120px;
+    --page-h: 790px;
+    --margin: 80px;
+    --gutter: 48px;
+}
+
+html, body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: #EDEDE8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern', 'liga', 'ss01';
+    line-height: 1.5;
+}
+
+/* ============================================================
+   PAGE SYSTEM
+   ============================================================ */
+.deck {
+    padding: 60px 20px;
+}
+
+.page {
+    width: var(--page-w);
+    height: var(--page-h);
+    max-width: 100%;
+    margin: 0 auto 48px;
+    background: var(--paper-pure);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 12px 40px rgba(0,0,0,0.08);
+    page-break-after: always;
+}
+
+.page--cream { background: var(--paper); }
+.page--dark { background: var(--ink); color: var(--paper-pure); }
+
+.page__inner {
+    position: absolute;
+    inset: 0;
+    padding: var(--margin);
+    display: flex;
+    flex-direction: column;
+}
+
+.page__inner--centered {
+    justify-content: center;
+}
+
+.page__margin-label {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    transform-origin: center center;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    white-space: nowrap;
+}
+
+.page__margin-label--dark {
+    color: rgba(255,255,255,0.7);
+}
+
+.page__number {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+}
+
+.page__number--dark { color: rgba(255,255,255,0.6); }
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+.display-xl {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(80px, 10vw, 140px);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+}
+
+.display-lg {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 1;
+    letter-spacing: -0.015em;
+}
+
+.display-md {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 56px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+}
+
+.display-sm {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 36px;
+    line-height: 1.1;
+    letter-spacing: -0.005em;
+}
+
+.heading {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.eyebrow--mute { color: var(--ink-mute); }
+
+.lead {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 300;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+    font-style: italic;
+}
+
+.body {
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+}
+
+.body--sm {
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.body--lg {
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.caption {
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+}
+
+.vertical-title {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   RULES / DIVIDERS
+   ============================================================ */
+.rule {
+    height: 1px;
+    background: var(--rule);
+    border: none;
+    width: 100%;
+}
+
+.rule--soft { background: var(--rule-soft); }
+.rule--short { width: 64px; }
+
+.rule-light { background: rgba(255,255,255,0.3); }
+
+/* ============================================================
+   IMAGE SLOTS
+   ============================================================ */
+.img-slot {
+    position: relative;
+    background: #D9D9D9;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.img-slot--dark {
+    background: #2A2A2A;
+}
+
+.img-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.img-slot__label {
+    position: relative;
+    z-index: 1;
+    font-family: var(--sans);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+}
+
+.img-slot--dark .img-slot__label {
+    color: rgba(255,255,255,0.35);
+}
+
+/* Full bleed image for section dividers */
+.full-bleed-image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.full-bleed-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%);
+    z-index: 1;
+}
+
+.full-bleed-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.full-bleed-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--paper-pure);
+}
+
+/* ============================================================
+   COVER PAGE
+   ============================================================ */
+.cover {
+    background: var(--ink);
+    color: var(--paper-pure);
+}
+
+.cover .full-bleed-image img {
+    display: none;
+}
+
+.cover-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.cover-bottom {
+    width: 100%;
+}
+
+.cover-eyebrow {
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 20px;
+}
+
+.cover-title {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: clamp(80px, 9vw, 128px);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    color: var(--paper-pure);
+    max-width: 900px;
+}
+
+.cover-title em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.cover-brand {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--paper-pure);
+}
+
+/* ============================================================
+   CONTENTS PAGE
+   ============================================================ */
+.contents-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 80px;
+    flex: 1;
+    align-items: stretch;
+}
+
+.contents-image {
+    height: 100%;
+}
+
+.contents-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 72px;
+}
+
+.contents-title {
+    margin-bottom: 0;
+}
+
+.contents-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 60px;
+}
+
+.contents-item {
+    border-top: 1px solid var(--rule);
+    padding-top: 20px;
+}
+
+.contents-item__num {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+    margin-bottom: 12px;
+}
+
+.contents-item__title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 12px;
+}
+
+.contents-item__desc {
+    font-size: 12px;
+    line-height: 1.55;
+    color: var(--ink-mute);
+    max-width: 240px;
+}
+
+/* ============================================================
+   SECTION DIVIDER
+   ============================================================ */
+.section-divider {
+    background: var(--ink);
+    color: var(--paper-pure);
+}
+
+.section-divider__number {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: rgba(255,255,255,0.7);
+}
+
+.section-divider__title {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-size: 144px;
+    line-height: 0.85;
+    letter-spacing: -0.025em;
+    color: var(--paper-pure);
+}
+
+.section-divider__desc {
+    max-width: 420px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.8);
+}
+
+.section-divider__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.section-divider .full-bleed-content {
+    justify-content: flex-end;
+}
+
+/* ============================================================
+   GENERAL LAYOUT HELPERS
+   ============================================================ */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 60px;
+}
+
+.page-header__title {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+
+.page-header__meta {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+}
+
+/* Two column split with vertical title */
+.vertical-layout {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 60px;
+    height: 100%;
+    align-items: center;
+}
+
+.vertical-layout__title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================================
+   BRAND MISSION PAGE
+   ============================================================ */
+.mission-content {
+    max-width: 780px;
+}
+
+.mission-statement {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-weight: 300;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin-bottom: 48px;
+}
+
+.mission-statement em {
+    font-style: italic;
+}
+
+.mission-explainer {
+    max-width: 500px;
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
+}
+
+/* ============================================================
+   GOLDEN CIRCLE
+   ============================================================ */
+.golden-circle-page {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 60px;
+    height: 100%;
+}
+
+.golden-hero {
+    position: relative;
+    background: var(--ink);
+    border-radius: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 60px;
+    min-height: 0;
+}
+
+.golden-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.65) 100%);
+    z-index: 1;
+}
+
+.golden-hero .img-slot {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #2A2A2A 0%, #0A0A0A 100%);
+}
+
+.golden-hero__quote {
+    position: relative;
+    z-index: 2;
+    font-family: var(--serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 40px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--paper-pure);
+    max-width: 700px;
+}
+
+.golden-triad {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 48px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+}
+
+.golden-cell__label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.golden-cell__text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink-soft);
+}
+
+/* ============================================================
+   VALUES PAGE
+   ============================================================ */
+.values-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    height: 100%;
+    align-items: center;
+}
+
+.values-image {
+    height: 80%;
+}
+
+.values-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.values-eyebrow {
+    margin-bottom: 32px;
+}
+
+.values-list {
+    list-style: none;
+    margin-bottom: 40px;
+}
+
+.values-list li {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 44px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+}
+
+.values-list li em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.values-explainer {
+    max-width: 440px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   TONE OF VOICE
+   ============================================================ */
+.tone-spectrums {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+
+.tone-row {
+    display: grid;
+    grid-template-columns: 110px 1fr 110px;
+    gap: 24px;
+    align-items: center;
+}
+
+.tone-row__left,
+.tone-row__right {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.tone-row__right {
+    text-align: right;
+}
+
+.tone-track {
+    position: relative;
+    height: 1px;
+    background: var(--rule);
+}
+
+.tone-dot {
+    position: absolute;
+    top: -5px;
+    width: 11px;
+    height: 11px;
+    background: var(--ink);
+    transform: translateX(-50%);
+}
+
+/* ============================================================
+   COMPETITOR ANALYSIS - one competitor per page with image
+   ============================================================ */
+.competitor-page {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 72px;
+    flex: 1;
+    min-height: 0;
+}
+
+.competitor-page__image {
+    min-height: 0;
+}
+
+.competitor-page__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-width: 0;
+}
+
+.competitor-page__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    min-width: 0;
+}
+
+.competitor-page__field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+.competitor-page__label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.competitor-page__text {
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   SET APART - mirrors Golden Circle layout with 4 columns
+   ============================================================ */
+.set-apart-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--rule);
+}
+
+.set-apart-cell__label {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 16px;
+}
+
+.set-apart-cell__text {
+    font-family: var(--sans);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+}
+
+/* ============================================================
+   PERSONA
+   ============================================================ */
+.persona-layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 64px;
+    height: 100%;
+    align-items: end;
+}
+
+.persona-image {
+    height: 100%;
+}
+
+.persona-content {
+    padding-right: 40px;
+}
+
+.persona-number {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 16px;
+}
+
+.persona-name {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    margin-bottom: 32px;
+}
+
+.persona-name em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+.persona-paragraphs p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin-bottom: 18px;
+    max-width: 460px;
+}
+
+.persona-paragraphs p:last-child {
+    margin-bottom: 0;
+}
+
+/* ============================================================
+   BRAND STORY
+   ============================================================ */
+.story-layout {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 48px;
+    height: 100%;
+}
+
+.story-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-content: start;
+}
+
+.story-cell {
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+}
+
+.story-cell__label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 14px;
+}
+
+.story-cell__text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 400px;
+}
+
+.story-title {
+    font-family: var(--serif);
+    font-size: 56px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.01em;
+}
+
+.story-title em {
+    font-style: italic;
+    font-weight: 300;
+}
+
+/* ============================================================
+   TRANSFORMATION
+   ============================================================ */
+.transformation-page {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 40px;
+    height: 100%;
+}
+
+.transformation-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.transformation-row {
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.transformation-box {
+    padding: 18px 0;
+    border-top: 1px solid var(--rule);
+}
+
+.transformation-box__label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 10px;
+}
+
+.transformation-box__text {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+}
+
+.transformation-arrow {
+    position: relative;
+}
+
+.transformation-arrow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--rule);
+}
+
+.transformation-arrow::after {
+    content: '';
+    position: absolute;
+    top: calc(50% - 4px);
+    right: 0;
+    border-left: 6px solid var(--ink);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+}
+
+/* ============================================================
+   AWARENESS - calls out the specific stage the audience is at
+   ============================================================ */
+.awareness-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 48px;
+}
+
+.awareness-layout .page-header {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.awareness-scale {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    padding: 0 6px;
+}
+
+.awareness-scale::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 12px;
+    right: 12px;
+    height: 1px;
+    background: var(--rule);
+    z-index: 0;
+}
+
+.awareness-scale__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.awareness-scale__dot {
+    width: 11px;
+    height: 11px;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.awareness-scale__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    white-space: nowrap;
+}
+
+.awareness-scale__step--active .awareness-scale__dot {
+    background: var(--ink);
+    border-color: var(--ink);
+}
+
+.awareness-scale__step--active .awareness-scale__label {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.awareness-callout {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 20px;
+    min-height: 0;
+}
+
+.awareness-callout__eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+}
+
+.awareness-stage-name {
+    font-family: var(--serif);
+    font-size: 48px;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+}
+
+.awareness-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 72px;
+    margin-top: 16px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+}
+
+.awareness-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.awareness-field__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.awareness-field__text {
+    font-family: var(--sans);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+}
+
+/* ============================================================
+   CUSTOMER JOURNEY - path the audience took before arriving
+   ============================================================ */
+.journey-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 48px;
+}
+
+.journey-layout .page-header {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.journey-narrative {
+    max-width: 760px;
+}
+
+.journey-narrative__lead {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.4;
+    letter-spacing: -0.005em;
+    color: var(--ink-soft);
+}
+
+.journey-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+}
+
+.journey-field {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.journey-field__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+}
+
+.journey-field__text {
+    font-family: var(--sans);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+}
+
+/* ============================================================
+   SITEMAP
+   ============================================================ */
+.sitemap-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.sitemap-pages {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    flex: 1;
+    min-height: 0;
+}
+
+.sitemap-page__name {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.sitemap-section {
+    margin-bottom: 18px;
+}
+
+.sitemap-section__label {
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+
+.sitemap-section__desc {
+    font-family: var(--sans);
+    font-size: 11px;
+    line-height: 1.5;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   MOODBOARD
+   ============================================================ */
+.moodboard-page {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 24px;
+    height: 100%;
+}
+
+.moodboard-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 12px;
+    height: 100%;
+}
+
+.moodboard-item {
+    position: relative;
+    background: #F0F0EB;
+    overflow: hidden;
+}
+
+.moodboard-item--tall { grid-row: span 2; }
+.moodboard-item--wide { grid-column: span 2; }
+.moodboard-item--large { grid-row: span 2; grid-column: span 2; }
+
+.moodboard-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ============================================================
+   TYPOGRAPHY PAGE
+   ============================================================ */
+.typography-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 48px;
+    height: 100%;
+}
+
+.type-specimen {
+    padding-top: 0;
+}
+
+.type-specimen__label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 8px;
+}
+
+.type-specimen__name {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 20px;
+}
+
+.type-specimen__display {
+    font-family: var(--serif);
+    font-size: 120px;
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+}
+
+.type-specimen__display--sans {
+    font-family: var(--sans);
+    font-size: 80px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+}
+
+.type-specimen__chars {
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+}
+
+/* ============================================================
+   COLOR PALETTE
+   ============================================================ */
+.palette-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 60px;
+    height: 100%;
+    align-items: center;
+}
+
+.palette-title {
+    font-family: var(--serif);
+    font-size: 80px;
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.015em;
+}
+
+.palette-title em {
+    font-style: italic;
+    font-weight: 300;
+    display: block;
+}
+
+.palette-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+}
+
+.palette-swatch {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.palette-swatch__color {
+    aspect-ratio: 1/1.3;
+    background: var(--swatch-color, #CCC);
+    border: 1px solid var(--rule-soft);
+}
+
+.palette-swatch__name {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.palette-swatch__hex {
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 10px;
+    color: var(--ink-mute);
+}
+
+/* ============================================================
+   CLOSING / THANK YOU PAGE
+   ============================================================ */
+.closing {
+    background: var(--ink);
+    color: var(--paper-pure);
+}
+
+.closing .page__inner {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.closing-title {
+    font-family: var(--serif);
+    font-weight: 300;
+    font-style: italic;
+    font-size: 128px;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+}
+
+.closing-subtitle {
+    font-size: 14px;
+    line-height: 1.7;
+    max-width: 480px;
+    color: rgba(255,255,255,0.75);
+    margin: 0 auto;
+}
+
+.closing-brand {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+}
+
+/* ============================================================
+   DOWNLOAD PDF BUTTON
+   Floats top-right, triggers window.print() which the browser
+   converts to PDF via the print dialog. Hidden in print output.
+   ============================================================ */
+.download-pdf {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    cursor: pointer;
+    padding: 10px 18px;
+    transition: all 0.2s ease;
+}
+
+.download-pdf:hover {
+    background: var(--ink);
+    color: var(--paper);
+}
+
+.download-pdf::after {
+    content: ' \2193';
+    display: inline;
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print {
+    html, body { background: white; }
+    .deck { padding: 0; }
+    .download-pdf { display: none !important; }
+    .page {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+    }
+    @page {
+        size: 1120px 790px;
+        margin: 0;
+    }
+}
+</style>
+</head>
+<body>
+
+<button type="button" class="download-pdf" onclick="window.print();">Download PDF</button>
+
+<div class="deck">
+
+<!-- ============================================================
+     PAGE 1 - COVER
+     ============================================================ -->
+<section class="page page--dark cover">
+    <div class="full-bleed-image">
+        <div class="img-slot img-slot--dark">
+            <img src="assets/cover.jpg" alt="" onerror="this.style.display='none'">
+            <div class="img-slot__label">assets/cover.jpg</div>
+        </div>
+    </div>
+    <div class="page__inner">
+        <div class="full-bleed-content">
+            <div class="cover-top">
+                <div class="cover-brand">[DESIGNER_NAME]</div>
+                <div class="cover-brand">[YEAR]</div>
+            </div>
+            <div class="cover-bottom">
+                <div class="cover-eyebrow eyebrow">[CLIENT_NAME]</div>
+                <h1 class="cover-title">Brand <em>Strategy</em></h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     PAGE 2 - CONTENTS
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="contents-layout">
+            <div class="contents-image">
+                <div class="img-slot">
+                    <img src="assets/contents.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/contents.jpg</div>
+                </div>
+            </div>
+            <div class="contents-text">
+                <h2 class="contents-title display-lg">Contents</h2>
+                <div class="contents-list">
+                    <div class="contents-item" data-ref="section-identity">
+                        <div class="contents-item__num">-</div>
+                        <div class="contents-item__title">Identity</div>
+                        <div class="contents-item__desc">A deep dive into your brand story and how you set yourself apart.</div>
+                    </div>
+                    <div class="contents-item" data-ref="section-audience">
+                        <div class="contents-item__num">-</div>
+                        <div class="contents-item__title">Audience</div>
+                        <div class="contents-item__desc">Audience analysis and the problems you solve for them.</div>
+                    </div>
+                    <div class="contents-item" data-ref="section-marketing">
+                        <div class="contents-item__num">-</div>
+                        <div class="contents-item__title">Marketing</div>
+                        <div class="contents-item__desc">How to apply strategic marketing to reach your audience effectively.</div>
+                    </div>
+                    <div class="contents-item" data-ref="section-website">
+                        <div class="contents-item__num">-</div>
+                        <div class="contents-item__title">Website</div>
+                        <div class="contents-item__desc">Website strategy and features to accomplish your goals.</div>
+                    </div>
+                    <div class="contents-item" data-ref="section-creative">
+                        <div class="contents-item__num">-</div>
+                        <div class="contents-item__title">Creative</div>
+                        <div class="contents-item__desc">Direction for how to apply this strategy to your visual identity.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">002 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 3 - IDENTITY SECTION DIVIDER
+     ============================================================ -->
+<section class="page page--dark section-divider" id="section-identity">
+    <div class="full-bleed-image">
+        <div class="img-slot img-slot--dark">
+            <img src="assets/section-identity.jpg" alt="" onerror="this.style.display='none'">
+            <div class="img-slot__label">assets/section-identity.jpg</div>
+        </div>
+    </div>
+    <div class="page__inner">
+        <div class="full-bleed-content">
+            <div class="section-divider__bottom">
+                <h2 class="section-divider__title"><em>Identity</em></h2>
+                <div class="section-divider__desc">A deep dive into your brand story and how you set yourself apart in your industry. The foundation everything else is built on.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     PAGE 4 - BRAND MISSION
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner page__inner--centered">
+        <div class="vertical-layout">
+            <div class="vertical-layout__title"></div>
+            <div class="mission-content">
+                <div class="eyebrow eyebrow--mute" style="margin-bottom: 32px;">01 - Brand Mission</div>
+                <p class="mission-statement">[BRAND_MISSION_STATEMENT]</p>
+                <div class="mission-explainer">
+                    <p class="caption">This is your mission statement about why you exist as a brand. A short and memorable pitch for how you help your customers achieve their desired transformation - keeping the customer at the centre of everything.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">004 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 5 - GOLDEN CIRCLE
+     ============================================================ -->
+<section class="page">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="golden-circle-page">
+            <div class="golden-hero">
+                <div class="img-slot img-slot--dark">
+                    <img src="assets/identity-accent.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/identity-accent.jpg</div>
+                </div>
+            </div>
+            <div>
+                <div class="eyebrow eyebrow--mute" style="margin-bottom: 24px;">02 - What, How, Why</div>
+                <div class="golden-triad">
+                    <div class="golden-cell">
+                        <div class="golden-cell__label">What</div>
+                        <p class="golden-cell__text">[WHAT_STATEMENT]</p>
+                    </div>
+                    <div class="golden-cell">
+                        <div class="golden-cell__label">How</div>
+                        <p class="golden-cell__text">[HOW_STATEMENT]</p>
+                    </div>
+                    <div class="golden-cell">
+                        <div class="golden-cell__label">Why</div>
+                        <p class="golden-cell__text">[WHY_STATEMENT]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">005 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 6 - VALUES
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="values-layout">
+            <div class="values-image">
+                <div class="img-slot">
+                    <img src="assets/values.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/values.jpg</div>
+                </div>
+            </div>
+            <div class="values-right">
+                <div class="values-eyebrow eyebrow eyebrow--mute">03 - Brand Values</div>
+                <ul class="values-list">
+                    <li>[VALUE_1]</li>
+                    <li><em>[VALUE_2]</em></li>
+                    <li>[VALUE_3]</li>
+                    <li><em>[VALUE_4]</em></li>
+                    <li>[VALUE_5]</li>
+                </ul>
+                <p class="values-explainer">Brand values are descriptors that align all brand communications, actions, goals and behaviours. They guide every business decision, distinguishing you from competitors and shaping your identity within your industry.</p>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">006 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 7 - TONE OF VOICE
+     ============================================================ -->
+<section class="page">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="vertical-layout">
+            <div class="vertical-layout__title">
+                <div class="vertical-title">Tone of voice</div>
+            </div>
+            <div class="tone-spectrums">
+                <div class="tone-row">
+                    <div class="tone-row__left">Formal</div>
+                    <div class="tone-track"><div class="tone-dot" style="left: [TONE_1]%"></div></div>
+                    <div class="tone-row__right">Friendly</div>
+                </div>
+                <div class="tone-row">
+                    <div class="tone-row__left">Mainstream</div>
+                    <div class="tone-track"><div class="tone-dot" style="left: [TONE_2]%"></div></div>
+                    <div class="tone-row__right">Edgy</div>
+                </div>
+                <div class="tone-row">
+                    <div class="tone-row__left">Serious</div>
+                    <div class="tone-track"><div class="tone-dot" style="left: [TONE_3]%"></div></div>
+                    <div class="tone-row__right">Playful</div>
+                </div>
+                <div class="tone-row">
+                    <div class="tone-row__left">Realistic</div>
+                    <div class="tone-track"><div class="tone-dot" style="left: [TONE_4]%"></div></div>
+                    <div class="tone-row__right">Idealistic</div>
+                </div>
+                <div class="tone-row">
+                    <div class="tone-row__left">Exclusive</div>
+                    <div class="tone-track"><div class="tone-dot" style="left: [TONE_5]%"></div></div>
+                    <div class="tone-row__right">Accessible</div>
+                </div>
+                <div class="tone-row">
+                    <div class="tone-row__left">Careful</div>
+                    <div class="tone-track"><div class="tone-dot" style="left: [TONE_6]%"></div></div>
+                    <div class="tone-row__right">Spontaneous</div>
+                </div>
+                <div class="tone-row">
+                    <div class="tone-row__left">Traditional</div>
+                    <div class="tone-track"><div class="tone-dot" style="left: [TONE_7]%"></div></div>
+                    <div class="tone-row__right">Progressive</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">007 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 8 - COMPETITOR ANALYSIS / 01
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="page-header">
+            <h2 class="page-header__title">[COMPETITOR_1_NAME]</h2>
+            <div class="page-header__meta">Competitor Analysis</div>
+        </div>
+        <div class="competitor-page">
+            <div class="competitor-page__image">
+                <div class="img-slot">
+                    <img src="assets/competitor-1.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/competitor-1.jpg</div>
+                </div>
+            </div>
+            <div class="competitor-page__content">
+                <div class="competitor-page__grid">
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">USP</div>
+                        <p class="competitor-page__text">[COMPETITOR_1_USP]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">Strengths</div>
+                        <p class="competitor-page__text">[COMPETITOR_1_STRENGTHS]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">Weaknesses</div>
+                        <p class="competitor-page__text">[COMPETITOR_1_WEAKNESSES]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">How We Differ</div>
+                        <p class="competitor-page__text">[COMPETITOR_1_DIFFERENCE]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">008 / 028</div>
+</section>
+
+<!-- ============================================================
+     PAGE 9 - COMPETITOR ANALYSIS / 02
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="page-header">
+            <h2 class="page-header__title">[COMPETITOR_2_NAME]</h2>
+            <div class="page-header__meta">Competitor Analysis</div>
+        </div>
+        <div class="competitor-page">
+            <div class="competitor-page__image">
+                <div class="img-slot">
+                    <img src="assets/competitor-2.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/competitor-2.jpg</div>
+                </div>
+            </div>
+            <div class="competitor-page__content">
+                <div class="competitor-page__grid">
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">USP</div>
+                        <p class="competitor-page__text">[COMPETITOR_2_USP]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">Strengths</div>
+                        <p class="competitor-page__text">[COMPETITOR_2_STRENGTHS]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">Weaknesses</div>
+                        <p class="competitor-page__text">[COMPETITOR_2_WEAKNESSES]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">How We Differ</div>
+                        <p class="competitor-page__text">[COMPETITOR_2_DIFFERENCE]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">009 / 028</div>
+</section>
+
+<!-- ============================================================
+     PAGE 10 - COMPETITOR ANALYSIS / 03
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="page-header">
+            <h2 class="page-header__title">[COMPETITOR_3_NAME]</h2>
+            <div class="page-header__meta">Competitor Analysis</div>
+        </div>
+        <div class="competitor-page">
+            <div class="competitor-page__image">
+                <div class="img-slot">
+                    <img src="assets/competitor-3.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/competitor-3.jpg</div>
+                </div>
+            </div>
+            <div class="competitor-page__content">
+                <div class="competitor-page__grid">
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">USP</div>
+                        <p class="competitor-page__text">[COMPETITOR_3_USP]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">Strengths</div>
+                        <p class="competitor-page__text">[COMPETITOR_3_STRENGTHS]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">Weaknesses</div>
+                        <p class="competitor-page__text">[COMPETITOR_3_WEAKNESSES]</p>
+                    </div>
+                    <div class="competitor-page__field">
+                        <div class="competitor-page__label">How We Differ</div>
+                        <p class="competitor-page__text">[COMPETITOR_3_DIFFERENCE]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">010 / 028</div>
+</section>
+
+<!-- ============================================================
+     PAGE 11 - HOW WE SET OURSELVES APART
+     ============================================================ -->
+<section class="page">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="golden-circle-page">
+            <div class="golden-hero">
+                <div class="img-slot img-slot--dark">
+                    <img src="assets/set-apart.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/set-apart.jpg</div>
+                </div>
+            </div>
+            <div>
+                <div class="eyebrow eyebrow--mute" style="margin-bottom: 24px;">How we set ourselves apart</div>
+                <div class="set-apart-grid">
+                    <div class="set-apart-cell">
+                        <div class="set-apart-cell__label">USP</div>
+                        <p class="set-apart-cell__text">[CLIENT_USP]</p>
+                    </div>
+                    <div class="set-apart-cell">
+                        <div class="set-apart-cell__label">Messaging</div>
+                        <p class="set-apart-cell__text">[CLIENT_MESSAGING]</p>
+                    </div>
+                    <div class="set-apart-cell">
+                        <div class="set-apart-cell__label">Values</div>
+                        <p class="set-apart-cell__text">[CLIENT_VALUES_SUMMARY]</p>
+                    </div>
+                    <div class="set-apart-cell">
+                        <div class="set-apart-cell__label">Aesthetics</div>
+                        <p class="set-apart-cell__text">[CLIENT_AESTHETICS_SUMMARY]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">011 / 028</div>
+</section>
+
+<!-- ============================================================
+     PAGE 10 - AUDIENCE SECTION DIVIDER
+     ============================================================ -->
+<section class="page page--dark section-divider" id="section-audience">
+    <div class="full-bleed-image">
+        <div class="img-slot img-slot--dark">
+            <img src="assets/section-audience.jpg" alt="" onerror="this.style.display='none'">
+            <div class="img-slot__label">assets/section-audience.jpg</div>
+        </div>
+    </div>
+    <div class="page__inner">
+        <div class="full-bleed-content">
+            <div class="section-divider__bottom">
+                <h2 class="section-divider__title"><em>Audience</em></h2>
+                <div class="section-divider__desc">Audience analysis and the problems you solve for them. Who they are, what they want, and why they'll choose you.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     PAGE 11 - PERSONA 1
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="persona-layout">
+            <div class="persona-image">
+                <div class="img-slot">
+                    <img src="assets/persona-1.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/persona-1.jpg</div>
+                </div>
+            </div>
+            <div class="persona-content">
+                <div class="persona-number">Persona 01</div>
+                <h2 class="persona-name">[PERSONA_1_NAME]</h2>
+                <div class="persona-paragraphs">
+                    <p>[PERSONA_1_PARAGRAPH_1]</p>
+                    <p>[PERSONA_1_PARAGRAPH_2]</p>
+                    <p>[PERSONA_1_PARAGRAPH_3]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">011 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 12 - PERSONA 2
+     ============================================================ -->
+<section class="page">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="persona-layout" style="grid-template-columns: 1fr 380px;">
+            <div class="persona-content" style="padding-right: 0; padding-left: 40px;">
+                <div class="persona-number">Persona 02</div>
+                <h2 class="persona-name">[PERSONA_2_NAME]</h2>
+                <div class="persona-paragraphs">
+                    <p>[PERSONA_2_PARAGRAPH_1]</p>
+                    <p>[PERSONA_2_PARAGRAPH_2]</p>
+                    <p>[PERSONA_2_PARAGRAPH_3]</p>
+                </div>
+            </div>
+            <div class="persona-image">
+                <div class="img-slot">
+                    <img src="assets/persona-2.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">assets/persona-2.jpg</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">012 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 13 - BRAND STORY SCRIPT
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="story-layout">
+            <div class="story-grid">
+                <div class="story-cell">
+                    <div class="story-cell__label">Desire</div>
+                    <p class="story-cell__text">[STORY_DESIRE]</p>
+                </div>
+                <div class="story-cell">
+                    <div class="story-cell__label">External Problem</div>
+                    <p class="story-cell__text">[STORY_EXTERNAL_PROBLEM]</p>
+                </div>
+                <div class="story-cell">
+                    <div class="story-cell__label">Villain</div>
+                    <p class="story-cell__text">[STORY_VILLAIN]</p>
+                </div>
+                <div class="story-cell">
+                    <div class="story-cell__label">Internal Problem</div>
+                    <p class="story-cell__text">[STORY_INTERNAL_PROBLEM]</p>
+                </div>
+                <div class="story-cell">
+                    <div class="story-cell__label">Philosophy</div>
+                    <p class="story-cell__text">[STORY_PHILOSOPHY]</p>
+                </div>
+                <div class="story-cell">
+                    <div class="story-cell__label">Plan</div>
+                    <p class="story-cell__text">[STORY_PLAN]</p>
+                </div>
+            </div>
+            <h2 class="story-title">Brand <em>Story</em> Script</h2>
+        </div>
+    </div>
+    <div class="page__number">013 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 14 - TRANSFORMATION
+     ============================================================ -->
+<section class="page">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="transformation-page">
+            <div class="transformation-grid">
+                    <div class="transformation-row">
+                        <div class="transformation-box">
+                            <div class="transformation-box__label">Struggle</div>
+                            <p class="transformation-box__text">[STRUGGLE_1]</p>
+                        </div>
+                        <div class="transformation-arrow"></div>
+                        <div class="transformation-box">
+                            <div class="transformation-box__label">Transformation</div>
+                            <p class="transformation-box__text">[TRANSFORMATION_1]</p>
+                        </div>
+                    </div>
+                    <div class="transformation-row">
+                        <div class="transformation-box">
+                            <div class="transformation-box__label">Struggle</div>
+                            <p class="transformation-box__text">[STRUGGLE_2]</p>
+                        </div>
+                        <div class="transformation-arrow"></div>
+                        <div class="transformation-box">
+                            <div class="transformation-box__label">Transformation</div>
+                            <p class="transformation-box__text">[TRANSFORMATION_2]</p>
+                        </div>
+                    </div>
+                    <div class="transformation-row">
+                        <div class="transformation-box">
+                            <div class="transformation-box__label">Struggle</div>
+                            <p class="transformation-box__text">[STRUGGLE_3]</p>
+                        </div>
+                        <div class="transformation-arrow"></div>
+                        <div class="transformation-box">
+                            <div class="transformation-box__label">Transformation</div>
+                            <p class="transformation-box__text">[TRANSFORMATION_3]</p>
+                        </div>
+                    </div>
+                    <div class="transformation-row" style="margin-bottom: 0;">
+                        <div class="transformation-box">
+                            <div class="transformation-box__label">Struggle</div>
+                            <p class="transformation-box__text">[STRUGGLE_4]</p>
+                        </div>
+                        <div class="transformation-arrow"></div>
+                        <div class="transformation-box">
+                            <div class="transformation-box__label">Transformation</div>
+                            <p class="transformation-box__text">[TRANSFORMATION_4]</p>
+                        </div>
+                    </div>
+            </div>
+            <h2 class="story-title" style="align-self: flex-end;">The <em>Transformation</em></h2>
+        </div>
+    </div>
+    <div class="page__number">014 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 15 - MARKETING SECTION DIVIDER
+     ============================================================ -->
+<section class="page page--dark section-divider" id="section-marketing">
+    <div class="full-bleed-image">
+        <div class="img-slot img-slot--dark">
+            <img src="assets/section-marketing.jpg" alt="" onerror="this.style.display='none'">
+            <div class="img-slot__label">assets/section-marketing.jpg</div>
+        </div>
+    </div>
+    <div class="page__inner">
+        <div class="full-bleed-content">
+            <div class="section-divider__bottom">
+                <h2 class="section-divider__title"><em>Marketing</em></h2>
+                <div class="section-divider__desc">How you apply strategic marketing to reach your audience effectively and build lasting demand.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     PAGE 18 - CUSTOMER JOURNEY
+     The path the audience has already taken before arriving on
+     the website. Describes what the client has built: channels,
+     nurture flow, and typical route to this page.
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="journey-layout">
+            <div class="page-header">
+                <h2 class="page-header__title">Customer <em>Journey</em></h2>
+                <div class="page-header__meta">Path to this page</div>
+            </div>
+            <div class="journey-narrative">
+                <p class="journey-narrative__lead">[JOURNEY_NARRATIVE]</p>
+            </div>
+            <div class="journey-fields">
+                <div class="journey-field">
+                    <div class="journey-field__label">01 - Discovery</div>
+                    <p class="journey-field__text">[JOURNEY_DISCOVERY]</p>
+                </div>
+                <div class="journey-field">
+                    <div class="journey-field__label">02 - Nurture</div>
+                    <p class="journey-field__text">[JOURNEY_NURTURE]</p>
+                </div>
+                <div class="journey-field">
+                    <div class="journey-field__label">03 - Arrival</div>
+                    <p class="journey-field__text">[JOURNEY_ARRIVAL]</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">018 / 028</div>
+</section>
+
+<!-- ============================================================
+     PAGE 19 - CUSTOMER AWARENESS (active stage callout)
+     Set data-active-stage to one of:
+     unaware | problem-aware | solution-aware | product-aware
+     JS at end of body adds the --active modifier to the matching step.
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="awareness-layout">
+            <div class="page-header">
+                <h2 class="page-header__title">Customer <em>Awareness</em></h2>
+                <div class="page-header__meta">Audience Stage</div>
+            </div>
+            <div class="awareness-scale" data-active-stage="[AWARENESS_STAGE_KEY]">
+                <div class="awareness-scale__step" data-stage="unaware">
+                    <div class="awareness-scale__dot"></div>
+                    <div class="awareness-scale__label">Unaware</div>
+                </div>
+                <div class="awareness-scale__step" data-stage="problem-aware">
+                    <div class="awareness-scale__dot"></div>
+                    <div class="awareness-scale__label">Problem Aware</div>
+                </div>
+                <div class="awareness-scale__step" data-stage="solution-aware">
+                    <div class="awareness-scale__dot"></div>
+                    <div class="awareness-scale__label">Solution Aware</div>
+                </div>
+                <div class="awareness-scale__step" data-stage="product-aware">
+                    <div class="awareness-scale__dot"></div>
+                    <div class="awareness-scale__label">Product Aware</div>
+                </div>
+            </div>
+            <div class="awareness-callout">
+                <div class="awareness-callout__eyebrow">Your audience is</div>
+                <h3 class="awareness-stage-name">[AWARENESS_STAGE]</h3>
+                <div class="awareness-fields">
+                    <div class="awareness-field">
+                        <div class="awareness-field__label">Description</div>
+                        <p class="awareness-field__text">[AWARENESS_DESCRIPTION]</p>
+                    </div>
+                    <div class="awareness-field">
+                        <div class="awareness-field__label">Strategy</div>
+                        <p class="awareness-field__text">[AWARENESS_STRATEGY]</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">019 / 028</div>
+</section>
+
+<!-- ============================================================
+     PAGE 18 - WEBSITE SECTION DIVIDER
+     ============================================================ -->
+<section class="page page--dark section-divider" id="section-website">
+    <div class="full-bleed-image">
+        <div class="img-slot img-slot--dark">
+            <img src="assets/section-website.jpg" alt="" onerror="this.style.display='none'">
+            <div class="img-slot__label">assets/section-website.jpg</div>
+        </div>
+    </div>
+    <div class="page__inner">
+        <div class="full-bleed-content">
+            <div class="section-divider__bottom">
+                <h2 class="section-divider__title"><em>Website</em></h2>
+                <div class="section-divider__desc">Website strategy and the strategic features we will use to accomplish your goals.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     PAGE 19 - SITEMAP
+
+     CONSTRAINT: This grid expects exactly 4 pages with 3 sections
+     each (12 total sections). If the client's sitemap has more or
+     fewer pages, the assembly workflow must adapt the HTML:
+     - Fewer than 4 pages: remove unused <div> blocks
+     - More than 4 pages: duplicate a block and increment
+       placeholder numbers
+     - Fewer/more than 3 sections per page: add or remove
+       .sitemap-section divs within the page block
+     The workflow_sitemap.md output should be validated against this
+     structure before assembly.
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="sitemap-layout">
+            <div class="page-header">
+                <h2 class="page-header__title"><em>Sitemap</em></h2>
+                <div class="page-header__meta">Site Structure</div>
+            </div>
+            <div class="sitemap-pages">
+                    <div>
+                        <h3 class="sitemap-page__name">[PAGE_1_NAME]</h3>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_1_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_1_DESC]</p>
+                        </div>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_2_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_2_DESC]</p>
+                        </div>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_3_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_3_DESC]</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="sitemap-page__name">[PAGE_2_NAME]</h3>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_4_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_4_DESC]</p>
+                        </div>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_5_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_5_DESC]</p>
+                        </div>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_6_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_6_DESC]</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="sitemap-page__name">[PAGE_3_NAME]</h3>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_7_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_7_DESC]</p>
+                        </div>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_8_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_8_DESC]</p>
+                        </div>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_9_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_9_DESC]</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="sitemap-page__name">[PAGE_4_NAME]</h3>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_10_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_10_DESC]</p>
+                        </div>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_11_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_11_DESC]</p>
+                        </div>
+                        <div class="sitemap-section">
+                            <div class="sitemap-section__label">[SECTION_12_NAME]</div>
+                            <p class="sitemap-section__desc">[SECTION_12_DESC]</p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div class="page__number">019 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 20 - CREATIVE DIRECTION SECTION DIVIDER
+     ============================================================ -->
+<section class="page page--dark section-divider" id="section-creative">
+    <div class="full-bleed-image">
+        <div class="img-slot img-slot--dark">
+            <img src="assets/section-creative.jpg" alt="" onerror="this.style.display='none'">
+            <div class="img-slot__label">assets/section-creative.jpg</div>
+        </div>
+    </div>
+    <div class="page__inner">
+        <div class="full-bleed-content">
+            <div class="section-divider__bottom">
+                <h2 class="section-divider__title"><em>Creative</em><br>Direction</h2>
+                <div class="section-divider__desc">How we apply this strategy to your visual identity. Moodboard, typography, colour and design direction.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================
+     PAGE 21 - MOODBOARD
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="moodboard-page">
+            <div class="page-header" style="margin-bottom: 0; padding-bottom: 16px; align-items: center;">
+                <div class="eyebrow eyebrow--mute">Visual Direction</div>
+                <div class="page-header__meta">Curated References</div>
+            </div>
+            <div class="moodboard-grid">
+                <div class="moodboard-item moodboard-item--large">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-01.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">01</div>
+                    </div>
+                </div>
+                <div class="moodboard-item moodboard-item--wide">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-02.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">02</div>
+                    </div>
+                </div>
+                <div class="moodboard-item moodboard-item--tall">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-03.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">03</div>
+                    </div>
+                </div>
+                <div class="moodboard-item moodboard-item--tall">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-04.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">04</div>
+                    </div>
+                </div>
+                <div class="moodboard-item">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-05.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">05</div>
+                    </div>
+                </div>
+                <div class="moodboard-item">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-06.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">06</div>
+                    </div>
+                </div>
+                <div class="moodboard-item moodboard-item--wide">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-07.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">07</div>
+                    </div>
+                </div>
+                <div class="moodboard-item">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-08.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">08</div>
+                    </div>
+                </div>
+                <div class="moodboard-item">
+                    <div class="img-slot">
+                        <img src="assets/moodboard-09.jpg" alt="" onerror="this.style.display='none'">
+                        <div class="img-slot__label">09</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">021 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 22 - TYPOGRAPHY
+     ============================================================ -->
+<section class="page">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="page-header" style="margin-bottom: 0; padding-bottom: 16px; align-items: center;">
+            <div class="eyebrow eyebrow--mute">Typography</div>
+            <div class="page-header__meta">Type Pairing</div>
+        </div>
+        <div class="typography-layout" style="padding-top: 24px;">
+            <div class="type-specimen">
+                <div class="type-specimen__label">Display / Headings</div>
+                <div class="type-specimen__name">[DISPLAY_FONT_NAME]</div>
+                <div class="type-specimen__display">Aa Bb Cc</div>
+                <div class="type-specimen__chars">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz 0123456789</div>
+            </div>
+            <div class="type-specimen">
+                <div class="type-specimen__label">Body / UI</div>
+                <div class="type-specimen__name">[BODY_FONT_NAME]</div>
+                <div class="type-specimen__display type-specimen__display--sans">Aa Bb Cc</div>
+                <div class="type-specimen__chars">ABCDEFGHIJKLMNOPQRSTUVWXYZ<br>abcdefghijklmnopqrstuvwxyz 0123456789</div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">022 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 23 - COLOR PALETTE
+     ============================================================ -->
+<section class="page page--cream">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="vertical-layout">
+            <div class="vertical-layout__title">
+                <div class="vertical-title">Colour palette</div>
+            </div>
+            <div class="palette-grid">
+                <div class="palette-swatch">
+                    <div class="palette-swatch__color" style="--swatch-color: [COLOR_1_HEX];"></div>
+                    <div>
+                        <div class="palette-swatch__name">[COLOR_1_NAME]</div>
+                        <div class="palette-swatch__hex">[COLOR_1_HEX]</div>
+                    </div>
+                </div>
+                <div class="palette-swatch">
+                    <div class="palette-swatch__color" style="--swatch-color: [COLOR_2_HEX];"></div>
+                    <div>
+                        <div class="palette-swatch__name">[COLOR_2_NAME]</div>
+                        <div class="palette-swatch__hex">[COLOR_2_HEX]</div>
+                    </div>
+                </div>
+                <div class="palette-swatch">
+                    <div class="palette-swatch__color" style="--swatch-color: [COLOR_3_HEX];"></div>
+                    <div>
+                        <div class="palette-swatch__name">[COLOR_3_NAME]</div>
+                        <div class="palette-swatch__hex">[COLOR_3_HEX]</div>
+                    </div>
+                </div>
+                <div class="palette-swatch">
+                    <div class="palette-swatch__color" style="--swatch-color: [COLOR_4_HEX];"></div>
+                    <div>
+                        <div class="palette-swatch__name">[COLOR_4_NAME]</div>
+                        <div class="palette-swatch__hex">[COLOR_4_HEX]</div>
+                    </div>
+                </div>
+                <div class="palette-swatch">
+                    <div class="palette-swatch__color" style="--swatch-color: [COLOR_5_HEX];"></div>
+                    <div>
+                        <div class="palette-swatch__name">[COLOR_5_NAME]</div>
+                        <div class="palette-swatch__hex">[COLOR_5_HEX]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">023 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 24 - WEBSITE INSPIRATION
+     ============================================================ -->
+<section class="page">
+    <div class="page__margin-label">[CLIENT_NAME]</div>
+    <div class="page__inner">
+        <div class="page-header" style="margin-bottom: 24px; padding-bottom: 16px; align-items: center;">
+            <div class="eyebrow eyebrow--mute">Visual References</div>
+        </div>
+        <div class="moodboard-grid" style="grid-template-rows: 1fr;">
+            <div class="moodboard-item moodboard-item--large" style="grid-row: span 1; grid-column: span 2;">
+                <div class="img-slot">
+                    <img src="assets/inspiration-01.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">Reference 01</div>
+                </div>
+            </div>
+            <div class="moodboard-item" style="grid-column: span 2;">
+                <div class="img-slot">
+                    <img src="assets/inspiration-02.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">Reference 02</div>
+                </div>
+            </div>
+            <div class="moodboard-item" style="grid-column: span 2;">
+                <div class="img-slot">
+                    <img src="assets/inspiration-03.jpg" alt="" onerror="this.style.display='none'">
+                    <div class="img-slot__label">Reference 03</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page__number">024 / 026</div>
+</section>
+
+<!-- ============================================================
+     PAGE 25 - CLOSING
+     ============================================================ -->
+<section class="page page--dark closing">
+    <div class="page__inner page__inner--centered">
+        <div class="full-bleed-content" style="justify-content: center; align-items: center; text-align: center;">
+            <div>
+                <div class="eyebrow" style="color: rgba(255,255,255,0.7); margin-bottom: 40px;">Thank you</div>
+                <h2 class="closing-title"><em>Let's build</em><br>something great.</h2>
+                <p class="closing-subtitle">This strategy is your foundation. Every page, every headline, every design decision from here traces back to what we've set out in these pages. Now we build.</p>
+            </div>
+        </div>
+        <div class="closing-brand">[DESIGNER_NAME]</div>
+    </div>
+</section>
+
+</div>
+
+<script>
+/* ============================================================
+   AUTO PAGE NUMBERING
+   Counts .page elements and populates:
+   - every .page__number footer with "NNN / TOTAL"
+   - every .contents-item[data-ref] with the page number of the
+     section divider it references (looked up by id)
+   ============================================================ */
+(function() {
+    var pages = document.querySelectorAll('.page');
+    var total = pages.length;
+    var pad3 = function(n) { return String(n).padStart(3, '0'); };
+    var pad2 = function(n) { return String(n).padStart(2, '0'); };
+
+    pages.forEach(function(page, i) {
+        var num = page.querySelector('.page__number');
+        if (num) {
+            num.textContent = pad3(i + 1) + ' / ' + pad3(total);
+        }
+    });
+
+    document.querySelectorAll('.contents-item[data-ref]').forEach(function(item) {
+        var ref = item.getAttribute('data-ref');
+        var target = document.getElementById(ref);
+        if (!target) return;
+        var idx = Array.prototype.indexOf.call(pages, target);
+        if (idx < 0) return;
+        var numEl = item.querySelector('.contents-item__num');
+        if (numEl) {
+            numEl.textContent = pad2(idx + 1);
+        }
+    });
+
+    /* Awareness page: highlight the active stage based on data-active-stage.
+       If the placeholder is still literal (un-populated), fall back to
+       'problem-aware' so the master template preview still shows the visual. */
+    document.querySelectorAll('.awareness-scale[data-active-stage]').forEach(function(scale) {
+        var active = scale.getAttribute('data-active-stage');
+        if (!active || active.indexOf('[') === 0) {
+            active = 'problem-aware';
+        }
+        var step = scale.querySelector('.awareness-scale__step[data-stage="' + active + '"]');
+        if (step) {
+            step.classList.add('awareness-scale__step--active');
+        }
+    });
+})();
+</script>
+
+</body>
+</html>
